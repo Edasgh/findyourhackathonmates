@@ -8,13 +8,14 @@ import { dbConn } from "@/lib/mongo";
 export const metadata = {
   title: "Find Your Hackathon Mates - Build your team for hackathons, connect with potential teammates,make project plans together",
   description:
-    "An interactive learning app that lets students create personalized study plans, level up through gamified quizzes, and earn rewards for their progress",
+    "An app to find hackathon teammates,video chat with teammates,share project plans together,assign works to teammates.",
 };
 
-const Layout = () => {
+const Layout = ({children}) => {
   return (
     <>
       <Navbar />
+      {children}
       <Footer />
     </>
   );
@@ -25,8 +26,7 @@ export default async function RootLayout({ children }) {
   return (
     <html lang="en">
       <body>
-        <Layout />
-        {children}
+        <Layout children={children} />
       </body>
     </html>
   );

@@ -5,9 +5,11 @@ import Link from "next/link";
 
 import {
   faBars,
-  faHouse,
-  faCircleQuestion,
   faCircleUser,
+  faPlus,
+  faPeopleGroup,
+  faUserPlus,
+  faXmark,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
@@ -20,35 +22,78 @@ export default function Navbar() {
   const [colB1, setColB1] = useState(false);
   const [colB2, setColB2] = useState(false);
   const [colB3, setColB3] = useState(false);
+  const [colB4, setColB4] = useState(false);
   const router = useRouter();
   const menuTransition = {
     transition: "all 0.2s ease-in-out",
   };
   return (
     <>
-      <nav className="navbar flex justify-between">
+      <nav className="navbar flex gap-2 flex-wrap justify-between">
         <Link href="/">
-          <p className="text-textPrimary font-semibold text-3xl cursor-pointer">
-              Find Your<span className="text-textSecondary">&nbsp;Hackathon Mates</span>
+          <p className="text-textPrimary font-semibold text-3xl flex flex-wrap gap-1 items-end cursor-pointer">
+            <span className="text-lg font-extralight"> find your</span>
+            <span className="text-textSecondary">&nbsp;HackathonMates</span>
           </p>
         </Link>
-        <FontAwesomeIcon
-          icon={faBars}
-          className="fa-solid fa-bars text-textPrimary text-2xl cursor-pointer"
-          onClick={() => {
-            setOpened(!opened);
-          }}
-        />
+
+        {token === null || !token ? (
+          <>
+            <button
+              onClick={() => {
+                router.push("/login");
+              }}
+              className="w-fit border-[1px] border-textBgPrimaryHv hover:bg-textBgPrimaryHv text-textPrimary hover:text-black  px-8 py-3 rounded-md cursor-pointer"
+            >
+              Login
+            </button>
+          </>
+        ) : (
+          <span className="flex flex-row items-center gap-4">
+            <button
+              onClick={() => {
+                "use client";
+                setOpened(false);
+                localStorage.removeItem("token");
+                router.push("/login");
+              }}
+              className="w-fit border-[1px] text-textPrimary border-textBgPrimaryHv hover:bg-textBgPrimaryHv hover:text-black  px-8 py-3 rounded-md"
+            >
+              Logout
+            </button>
+            {opened ? (
+              <>
+                <FontAwesomeIcon
+                  icon={faXmark}
+                  className="text-textPrimary text-2xl border border-textPrimary p-1 rounded-md cursor-pointer"
+                  onClick={() => {
+                    setOpened(!opened);
+                  }}
+                />
+              </>
+            ) : (
+              <>
+                <FontAwesomeIcon
+                  icon={faBars}
+                  className="text-textPrimary text-2xl cursor-pointer"
+                  onClick={() => {
+                    setOpened(!opened);
+                  }}
+                />
+              </>
+            )}
+          </span>
+        )}
       </nav>
       {opened === true && (
         <ul
           type="none"
           style={{ boxShadow: ".5px .5px 1px black,-.5px -.5px 6px black" }}
-          className="absolute w-64 top-16 right-8 px-7 py-8 bg-bgSecondary flex flex-col gap-3 justify-end rounded-lg z-[9999999999]"
+          className="absolute w-64 min-[320px]:top-44 min-[446px]:top-32 min-[615px]:top-24 max-[614px]:left-[1rem] min-[615px]:right-8 px-7 py-8 bg-bgSecondary flex flex-col gap-3 justify-end rounded-lg z-[9999999999]"
         >
           <Link
-            className=" text-textPrimary hover:bg-textBgPrimaryHv hover:text-black hover:text-center flex gap-4 items-center px-1 py-2"
-            href="/"
+            className="text-textPrimary hover:bg-textBgPrimaryHv hover:text-black hover:text-center flex gap-4 items-center px-1 py-2"
+            href="/profile"
             style={menuTransition}
             onMouseOver={() => {
               setColB1(true);
@@ -58,16 +103,16 @@ export default function Navbar() {
             }}
           >
             <FontAwesomeIcon
-              icon={faHouse}
+              icon={faCircleUser}
               className={
-                colB1 ? "text-black text-2xl" : "text-textPrimary text-2xl"
+                colB1 ? "text-2xl text-black" : "text-textPrimary text-2xl"
               }
             />
-            Home
+            Profile
           </Link>
           <Link
-            className="text-textPrimary hover:bg-textBgPrimaryHv hover:text-black hover:text-center flex items-center gap-4 px-1 py-2"
-            href="/about"
+            className="text-textPrimary hover:bg-textBgPrimaryHv hover:text-black hover:text-center flex gap-4 items-center px-1 py-2"
+            href="/createTeam"
             style={menuTransition}
             onMouseOver={() => {
               setColB2(true);
@@ -77,58 +122,51 @@ export default function Navbar() {
             }}
           >
             <FontAwesomeIcon
-              icon={faCircleQuestion}
+              icon={faPlus}
               className={
-                colB2 ? "text-black text-2xl" : "text-textPrimary text-2xl"
+                colB2 ? "text-2xl text-black" : "text-textPrimary text-2xl"
               }
             />
-            About
+            Create your Team
           </Link>
-          {token === null || !token ? (
-            <>
-              <button
-                onClick={() => {
-                  router.push("/login");
-                }}
-                className="w-fit border-[1px] border-textBgPrimaryHv hover:bg-textBgPrimaryHv text-textPrimary hover:text-black  px-8 py-3 rounded-md cursor-pointer"
-              >
-                Login
-              </button>
-            </>
-          ) : (
-            <>
-              <Link
-                className="text-textPrimary hover:bg-textBgPrimaryHv hover:text-black hover:text-center flex gap-4 items-center px-1 py-2"
-                href="/profile"
-                style={menuTransition}
-                onMouseOver={() => {
-                  setColB3(true);
-                }}
-                onMouseOut={() => {
-                  setColB3(false);
-                }}
-              >
-                <FontAwesomeIcon
-                  icon={faCircleUser}
-                  className={
-                    colB3 ? "text-2xl text-black" : "text-textPrimary text-2xl"
-                  }
-                />
-                Profile
-              </Link>
-              <button
-                onClick={() => {
-                  "use client";
-                  setOpened(false);
-                  localStorage.removeItem("token");
-                  router.push("/login");
-                }}
-                className="w-fit border-[1px] text-textPrimary border-textBgPrimaryHv hover:bg-textBgPrimaryHv hover:text-black  px-8 py-3 rounded-md"
-              >
-                Logout
-              </button>
-            </>
-          )}
+          <Link
+            className="text-textPrimary hover:bg-textBgPrimaryHv hover:text-black hover:text-center flex gap-4 items-center px-1 py-2"
+            href="/teamMates"
+            style={menuTransition}
+            onMouseOver={() => {
+              setColB3(true);
+            }}
+            onMouseOut={() => {
+              setColB3(false);
+            }}
+          >
+            <FontAwesomeIcon
+              icon={faUserPlus}
+              className={
+                colB3 ? "text-2xl text-black" : "text-textPrimary text-2xl"
+              }
+            />
+            Find Teammates
+          </Link>
+          <Link
+            className="text-textPrimary hover:bg-textBgPrimaryHv hover:text-black hover:text-center flex gap-4 items-center px-1 py-2"
+            href="/teams"
+            style={menuTransition}
+            onMouseOver={() => {
+              setColB4(true);
+            }}
+            onMouseOut={() => {
+              setColB4(false);
+            }}
+          >
+            <FontAwesomeIcon
+              icon={faPeopleGroup}
+              className={
+                colB4 ? "text-2xl text-black" : "text-textPrimary text-2xl"
+              }
+            />
+            Join a Team
+          </Link>
         </ul>
       )}
     </>
