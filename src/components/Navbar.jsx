@@ -1,6 +1,6 @@
 "use client";
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { redirect, useRouter } from "next/navigation";
+import { useEffect, useLayoutEffect, useState } from "react";
 import Link from "next/link";
 
 import {
@@ -12,11 +12,14 @@ import {
   faXmark,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { sessionToken } from "@/utils/session";
 
 export default function Navbar() {
   const [token, setToken] = useState(null);
-  useEffect(() => {
-    setToken(localStorage.getItem("token"));
+  useLayoutEffect(() => {
+    const savedToken = sessionToken;
+    if(savedToken) setToken(savedToken);
+    
   }, []);
   const [opened, setOpened] = useState(false);
   const [colB1, setColB1] = useState(false);
@@ -55,7 +58,7 @@ export default function Navbar() {
                 "use client";
                 setOpened(false);
                 localStorage.removeItem("token");
-                router.push("/login");
+                window.location.reload();
               }}
               className="w-fit border-[1px] text-textPrimary border-textBgPrimaryHv hover:bg-textBgPrimaryHv hover:text-black  px-8 py-3 rounded-md"
             >

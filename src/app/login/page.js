@@ -1,7 +1,7 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { redirect, useRouter } from "next/navigation";
+import { useEffect, useLayoutEffect, useState } from "react";
 import Link from "next/link";
 
 import { faEye, faEyeSlash } from "@fortawesome/free-regular-svg-icons";
@@ -9,6 +9,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+
+
+import { sessionToken } from "@/utils/session";
 
 export default function Login() {
   const [token, setToken] = useState(null);
@@ -21,13 +24,34 @@ export default function Login() {
 
   //router
   const router = useRouter();
+
+  const onFocusStyle = {
+    padding: "0 0.5rem",
+    color: " var(--text-secondary)",
+    transform: " translate(-10px, -17px) scale(0.8)",
+    zIndex: "8",
+  };
+
+  useLayoutEffect(() => {
+    const savedToken = sessionToken;
+    if(savedToken) redirect("/");
+  }, []);
+
+
+  const getStyle = (isFocus) => {
+    return isFocus ? onFocusStyle : { display: "inherit" };
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    let tId;
 
     try {
       const data = new FormData(e.currentTarget);
       const email = data.get("emailLogin");
       const password = data.get("passwordLogin");
+
+       tId = toast.loading("Logging you in....");
 
       const response = await fetch("/api/login", {
         method: "POST",
@@ -43,39 +67,27 @@ export default function Login() {
       if (response.status === 200) {
         const data = await response.json();
         localStorage.setItem("token", data.token);
-        toast.success("Logged In Successfully!");
+         toast.update(tId, {
+           render: "Logged in Successfully!",
+           type: "success",
+           isLoading: false,
+           autoClose: 2000,
+         });
         setInterval(() => {
           router.push("/");
         }, 3000);
+        window.location.reload();
       }
     } catch (error) {
-      toast.error(error.message);
+       toast.update(tId, {
+         render: error.message,
+         type: "error",
+         isLoading: false,
+         autoClose: 2000,
+       });
       console.error(error.message);
     }
   };
-
-  const onFocusStyle = {
-    padding: "0 0.5rem",
-    color: " var(--text-secondary)",
-    transform: " translate(-10px, -17px) scale(0.8)",
-    zIndex: "8",
-  };
-
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      const savedToken = localStorage.getItem("token");
-      setToken(savedToken);
-      if (savedToken) {
-        router.push("/");
-      }
-    }
-  }, []);
-
-  const getStyle = (isFocus) => {
-    return isFocus ? onFocusStyle : { display: "inherit" };
-  };
-
- 
 
   return (
     <>

@@ -1,24 +1,23 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { sessionToken } from "@/utils/session";
+import { redirect, useRouter } from "next/navigation";
+import { useEffect, useLayoutEffect, useState } from "react";
 
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 export default function ForgotPassword() {
-  const [token, setToken] = useState(null);
-  const router = useRouter();
- const [isEmailFocus, setIsEmailFocus] = useState(false);
  
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      const savedToken = localStorage.getItem("token");
-      setToken(savedToken);
+  const [isEmailFocus, setIsEmailFocus] = useState(false);
+
+  useLayoutEffect(() => {
+ 
+      const savedToken = sessionToken;
       if (savedToken) {
-        router.push("/");
+       redirect("/");
       }
-    }
+    
   }, []);
 
   const onFocusStyle = {
@@ -33,35 +32,45 @@ export default function ForgotPassword() {
   };
 
   const handleSubmit = async (e) => {
-     e.preventDefault();
- 
-     try {
-       const data = new FormData(e.currentTarget);
-       const email = data.get("email");
-      
- 
-       const response = await fetch("/api/forgot_password", {
-         method: "POST",
-         headers: {
-           "content-type": "application/json",
-         },
-         body: JSON.stringify({
-           email: email,
-         }),
-       });
- 
-       if (response.status === 200) {
-         toast.success("Verification link sent!");
-       }
-     } catch (error) {
-       toast.error("Something went wrong!");
-       console.error(error.message);
-     }
-   };
+    e.preventDefault();
+    let tId;
+
+    try {
+      const data = new FormData(e.currentTarget);
+      const email = data.get("email");
+      tId = toast.loading("Please wait....");
+
+      const response = await fetch("/api/forgot_password", {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+        },
+        body: JSON.stringify({
+          email: email,
+        }),
+      });
+      if (response.status === 200) {
+        toast.update(tId, {
+          render: "Verification Link Sent!",
+          type: "success",
+          isLoading: false,
+          autoClose:3000,
+        });
+      }
+    } catch (error) {
+      toast.update(tId, {
+        render: "Something went wrong!",
+        type: "error",
+        isLoading: false,
+        autoClose: 5000,
+      });
+      console.error(error.message);
+    }
+  };
 
   return (
     <>
-      <ToastContainer position="bottom-left" theme="dark" />
+      <ToastContainer position="top-center" theme="dark" />
       <div className="main-div w-1/3 max-[900px]:w-full p-7 m-auto mt-10 flex flex-col gap-3 justify-center items-center">
         <h1 className="text-center section-title text-textPrimary poppins-semibold text-[28px]">
           Verify Email

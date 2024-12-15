@@ -1,22 +1,26 @@
 "use client";
 
+import NotFound from "@/components/not-found";
 import { faEye, faEyeSlash } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-import { useRouter } from "next/navigation";
-import { useEffect, useState, use } from "react";
+import { redirect, useRouter } from "next/navigation";
+import { useEffect, useState, use, useLayoutEffect } from "react";
 
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
+
+
 export default function ResetPassword({ searchParams }) {
-  const [token, setToken] = useState(null);
   const router = useRouter();
+
 
   const { id } = use(searchParams);
   if (!id) {
-    return <></>;
+    return <NotFound/>;
   }
+
 
   // access password & confirm password value
   const [password, setPassword] = useState("");
@@ -47,15 +51,7 @@ export default function ResetPassword({ searchParams }) {
     }
   }
 
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      const savedToken = localStorage.getItem("token");
-      setToken(savedToken);
-      if (savedToken) {
-        router.push("/");
-      }
-    }
-  }, []);
+ 
 
   const onFocusStyle = {
     padding: "0 0.5rem",

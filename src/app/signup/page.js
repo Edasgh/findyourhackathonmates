@@ -1,7 +1,7 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { redirect, useRouter } from "next/navigation";
+import { useEffect, useLayoutEffect, useState } from "react";
 import Link from "next/link";
 
 import { faEye, faEyeSlash } from "@fortawesome/free-regular-svg-icons";
@@ -9,6 +9,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import NotFound from "@/components/not-found";
+
+import { sessionToken } from "@/utils/session";
 
 export default function Signup() {
   // access password & confirm password value
@@ -53,6 +56,7 @@ export default function Signup() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    let tId = toast.loading("Signing you up....");
     if (isSame) {
       try {
         const data = new FormData(e.currentTarget);
@@ -84,21 +88,40 @@ export default function Signup() {
           });
 
           if (response.status === 201) {
-            toast.success("Signed Up Successfully!");
+            toast.update(tId, {
+              render: "Signed up Successfully!",
+              type: "success",
+              isLoading: false,
+              autoClose: 2000,
+            });
             setInterval(() => {
               router.push("/login");
             }, 3000);
           }
         } else {
-          toast.error(
-            "Skills should be ',' separated and Atleast 5 skills should be added!"
-          );
+          toast.update(tId, {
+            render:
+              "Skills should be ',' separated and Atleast 5 skills should be added!",
+            type: "error",
+            isLoading: false,
+            autoClose: 2000,
+          });
         }
       } catch (error) {
-        toast.error(error.message);
+        toast.update(tId, {
+          render: error.message,
+          type: "error",
+          isLoading: false,
+          autoClose: 2000,
+        });
       }
     } else {
-      toast.error("Password & Confirm Password should be same");
+      toast.update(tId, {
+        render: "Password & Confirm Password should be same",
+        type: "error",
+        isLoading: false,
+        autoClose: 2000,
+      });
     }
   };
 
@@ -109,15 +132,11 @@ export default function Signup() {
     zIndex: "8",
   };
 
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      const savedToken = localStorage.getItem("token");
-      setToken(savedToken);
-      if (savedToken) {
-        router.push("/");
-      }
-    }
+  useLayoutEffect(() => {
+    const savedToken = sessionToken;
+    if(savedToken) redirect("/");
   }, []);
+
 
   const getStyle = (isFocus) => {
     return isFocus ? onFocusStyle : { display: "inherit" };
