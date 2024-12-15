@@ -33,7 +33,6 @@ const teamModel = mongoose.Schema(
         name: { type: String, required: true },
         link: { type: String, required: true },
       },
-      default: [{ name: "Github Link", link: "Add your project link" }],
     },
   },
   { timestamps: true }

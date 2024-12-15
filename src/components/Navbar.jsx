@@ -1,6 +1,6 @@
 "use client";
-import { redirect, useRouter } from "next/navigation";
-import { useEffect, useLayoutEffect, useState } from "react";
+import {  useRouter } from "next/navigation";
+import { useLayoutEffect, useState } from "react";
 import Link from "next/link";
 
 import {
@@ -12,21 +12,31 @@ import {
   faXmark,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { sessionToken } from "@/utils/session";
+
+import { getToken } from "@/lib/verifyToken";
 
 export default function Navbar() {
+    const router = useRouter();
   const [token, setToken] = useState(null);
   useLayoutEffect(() => {
-    const savedToken = sessionToken;
+    const savedToken = getToken();
     if(savedToken) setToken(savedToken);
     
   }, []);
+
+  const handleLogOut=async()=>{
+       const response = await fetch("/api/logout");
+       if (response.status === 200) {
+         window.location.reload();
+       }
+  }
+
   const [opened, setOpened] = useState(false);
   const [colB1, setColB1] = useState(false);
   const [colB2, setColB2] = useState(false);
   const [colB3, setColB3] = useState(false);
   const [colB4, setColB4] = useState(false);
-  const router = useRouter();
+
   const menuTransition = {
     transition: "all 0.2s ease-in-out",
   };
@@ -54,12 +64,7 @@ export default function Navbar() {
         ) : (
           <span className="flex flex-row items-center gap-4">
             <button
-              onClick={() => {
-                "use client";
-                setOpened(false);
-                localStorage.removeItem("token");
-                window.location.reload();
-              }}
+              onClick={handleLogOut}
               className="w-fit border-[1px] text-textPrimary border-textBgPrimaryHv hover:bg-textBgPrimaryHv hover:text-black  px-8 py-3 rounded-md"
             >
               Logout

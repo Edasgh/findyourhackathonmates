@@ -4,6 +4,7 @@ import { dbConn } from "@/lib/mongo";
 import User from "@/model/user-model";
 import { generateToken } from "@/lib/generateToken";
 
+
 export const POST = async (request) => {
   const { email, password } = await request.json();
 
@@ -23,7 +24,9 @@ export const POST = async (request) => {
         token: generateToken(userExists._id),
         success: true,
       };
-      return NextResponse.json(user, { status: 200 });
+      const response = NextResponse.json(user, { status: 200 });
+      response.cookies.set("token",user.token,{httpOnly:true});
+      return response;
     }
   } catch (error) {
     console.log(error);

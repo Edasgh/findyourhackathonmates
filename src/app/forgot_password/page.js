@@ -1,24 +1,21 @@
 "use client";
 
-import { sessionToken } from "@/utils/session";
-import { redirect, useRouter } from "next/navigation";
-import { useEffect, useLayoutEffect, useState } from "react";
+import { getToken } from "@/lib/verifyToken";
+import { redirect } from "next/navigation";
+import { useLayoutEffect, useState } from "react";
 
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 export default function ForgotPassword() {
- 
-  const [isEmailFocus, setIsEmailFocus] = useState(false);
-
   useLayoutEffect(() => {
- 
-      const savedToken = sessionToken;
-      if (savedToken) {
-       redirect("/");
-      }
-    
+    const savedToken = getToken();
+    if (savedToken) {
+      redirect("/");
+    }
   }, []);
+
+  const [isEmailFocus, setIsEmailFocus] = useState(false);
 
   const onFocusStyle = {
     padding: "0 0.5rem",
@@ -54,7 +51,7 @@ export default function ForgotPassword() {
           render: "Verification Link Sent!",
           type: "success",
           isLoading: false,
-          autoClose:3000,
+          autoClose: 3000,
         });
       }
     } catch (error) {

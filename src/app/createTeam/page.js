@@ -1,14 +1,18 @@
 "use client";
 
-import NotFound from "@/components/not-found";
-import { useRouter } from "next/navigation";
-import { use, useEffect, useState } from "react";
+import { getToken } from "@/lib/verifyToken";
+import { redirect, useRouter } from "next/navigation";
+import { useLayoutEffect, useState } from "react";
 
 
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-export default function createTeam({searchParams}) {
+export default function createTeam() {
+  useLayoutEffect(()=>{
+    const token = getToken();
+    if(!token) redirect("/");
+  })
   // to show floating labels if focused on input fields
   const [isNameFocus, setIsNameFocus] = useState(false);
    const [isEmailFocus, setIsEmailFocus] = useState(false);
@@ -16,11 +20,7 @@ export default function createTeam({searchParams}) {
    const [isDescFocus, setIsDescFocus] = useState(false);
    const [isSkillsFocus, setIsSkillsFocus] = useState(false);
 
-   const {id} = use(searchParams);
-   if(!id) return(
-    <NotFound/>
-   )
-
+   
   //router
   const router = useRouter();
 

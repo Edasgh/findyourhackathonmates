@@ -1,9 +1,12 @@
-import NotFound from "@/components/not-found";
-import { use } from "react";
+"use client";
+import { getToken } from "@/lib/verifyToken";
+import { useLayoutEffect } from "react";
 
-export default function Teams({searchParams}) {
-  const {id} = use(searchParams);
-  if(!id) return <NotFound/>;
-  
+export default function Teams() {
+  useLayoutEffect(() => {
+    const token = getToken();
+    if (!token) redirect("/");
+  });
+
   return <>Teams</>;
 }

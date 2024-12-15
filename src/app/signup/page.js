@@ -1,7 +1,7 @@
 "use client";
 
 import { redirect, useRouter } from "next/navigation";
-import { useEffect, useLayoutEffect, useState } from "react";
+import { useLayoutEffect, useState } from "react";
 import Link from "next/link";
 
 import { faEye, faEyeSlash } from "@fortawesome/free-regular-svg-icons";
@@ -9,11 +9,15 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import NotFound from "@/components/not-found";
 
-import { sessionToken } from "@/utils/session";
+import { getToken } from "@/lib/verifyToken";
 
 export default function Signup() {
+  useLayoutEffect(() => {
+    const savedToken = getToken();
+    if (savedToken) redirect("/");
+  }, []);
+
   // access password & confirm password value
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -131,12 +135,6 @@ export default function Signup() {
     transform: " translate(-10px, -17px) scale(0.8)",
     zIndex: "8",
   };
-
-  useLayoutEffect(() => {
-    const savedToken = sessionToken;
-    if(savedToken) redirect("/");
-  }, []);
-
 
   const getStyle = (isFocus) => {
     return isFocus ? onFocusStyle : { display: "inherit" };

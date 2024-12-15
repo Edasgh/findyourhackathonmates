@@ -1,7 +1,7 @@
 "use client";
 
 import { redirect, useRouter } from "next/navigation";
-import { useEffect, useLayoutEffect, useState } from "react";
+import { useLayoutEffect, useState } from "react";
 import Link from "next/link";
 
 import { faEye, faEyeSlash } from "@fortawesome/free-regular-svg-icons";
@@ -9,12 +9,16 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { getToken } from "@/lib/verifyToken";
 
 
-import { sessionToken } from "@/utils/session";
 
 export default function Login() {
-  const [token, setToken] = useState(null);
+  
+  useLayoutEffect(() => {
+    const savedToken = getToken();
+    if (savedToken) redirect("/");
+  }, []);
 
   //to show floating labels if focused on input fields
   const [isPasswordFocus, setIsPasswordFocus] = useState(false);
@@ -32,12 +36,6 @@ export default function Login() {
     zIndex: "8",
   };
 
-  useLayoutEffect(() => {
-    const savedToken = sessionToken;
-    if(savedToken) redirect("/");
-  }, []);
-
-
   const getStyle = (isFocus) => {
     return isFocus ? onFocusStyle : { display: "inherit" };
   };
@@ -51,7 +49,7 @@ export default function Login() {
       const email = data.get("emailLogin");
       const password = data.get("passwordLogin");
 
-       tId = toast.loading("Logging you in....");
+      tId = toast.loading("Logging you in....");
 
       const response = await fetch("/api/login", {
         method: "POST",
@@ -66,25 +64,24 @@ export default function Login() {
 
       if (response.status === 200) {
         const data = await response.json();
-        localStorage.setItem("token", data.token);
-         toast.update(tId, {
-           render: "Logged in Successfully!",
-           type: "success",
-           isLoading: false,
-           autoClose: 2000,
-         });
+        toast.update(tId, {
+          render: "Logged in Successfully!",
+          type: "success",
+          isLoading: false,
+          autoClose: 2000,
+        });
         setInterval(() => {
           router.push("/");
         }, 3000);
         window.location.reload();
       }
     } catch (error) {
-       toast.update(tId, {
-         render: error.message,
-         type: "error",
-         isLoading: false,
-         autoClose: 2000,
-       });
+      toast.update(tId, {
+        render: error.message,
+        type: "error",
+        isLoading: false,
+        autoClose: 2000,
+      });
       console.error(error.message);
     }
   };
