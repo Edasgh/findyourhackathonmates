@@ -107,6 +107,54 @@ a {
   color: grey;
 }
 
+/* The flip card container - set the width and height to whatever you want. We have added the border property to demonstrate that the flip itself goes out of the box on hover (remove perspective if you don't want the 3D effect */
+.team-card {
+  position: relative;
+  background-color: transparent;
+
+  perspective: 1000px; /* Remove this if you don't want the 3D effect */
+}
+
+/* This container is needed to position the front and back side */
+.team-card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  transition: transform 0.8s;
+  transform-style: preserve-3d;
+}
+
+/* Do an horizontal flip when you move the mouse over the flip box container */
+.team-card:hover .team-card-inner {
+  transform: rotateY(180deg);
+}
+
+/* Position the front and back side */
+.team-card-front, .team-card-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  padding: inherit;
+  -webkit-backface-visibility: hidden; /* Safari */
+  backface-visibility: hidden;
+}
+
+/* Style the back side */
+.team-card-back {
+  background-color: transparent;
+  color:var(--text-bg-primary);
+  transform: rotateY(180deg);
+}
+
+
+.dashing{
+  box-shadow: 0 0 3px var(--text-secondary);
+}
+.dashing:hover {
+   box-shadow: 0 0 24px var(--text-secondary);
+}
+
 @media screen and (max-width: 500px) {
   .login-signup-form {
     gap: 0rem;
