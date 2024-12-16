@@ -24,7 +24,7 @@ export const POST = async (request) => {
         token: generateToken(userExists._id),
         success: true,
       };
-      const response = NextResponse.json(user, { status: 200 });
+      const response = NextResponse.json({message:"Logged in successfully!"}, { status: 200 });
       response.cookies.set("token",user.token,{httpOnly:true});
       return response;
     }

@@ -1,29 +1,27 @@
 "use client";
 
-import { getToken } from "@/lib/verifyToken";
-import { redirect, useRouter } from "next/navigation";
-import { useLayoutEffect, useState } from "react";
+import NotFound from "@/components/not-found";
 
+import { useRouter } from "next/navigation";
+import { use, useState } from "react";
 
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-export default function createTeam() {
-  useLayoutEffect(()=>{
-    const token = getToken();
-    if(!token) redirect("/");
-  })
+export default function createTeam({ searchParams }) {
+  const { id } = use(searchParams);
+  if (!id) {
+    return <NotFound />;
+  }
   // to show floating labels if focused on input fields
   const [isNameFocus, setIsNameFocus] = useState(false);
-   const [isEmailFocus, setIsEmailFocus] = useState(false);
-   const [isghFocus, setIsghFocus] = useState(false);
-   const [isDescFocus, setIsDescFocus] = useState(false);
-   const [isSkillsFocus, setIsSkillsFocus] = useState(false);
+  const [isEmailFocus, setIsEmailFocus] = useState(false);
+  const [isghFocus, setIsghFocus] = useState(false);
+  const [isDescFocus, setIsDescFocus] = useState(false);
+  const [isSkillsFocus, setIsSkillsFocus] = useState(false);
 
-   
   //router
   const router = useRouter();
-
 
   const onFocusStyle = {
     padding: "0 0.5rem",
@@ -36,61 +34,94 @@ export default function createTeam() {
     return isFocus ? onFocusStyle : { display: "inherit" };
   };
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const data = new FormData(e.currentTarget);
+    const name = data.get("TeamName");
+    const desc = data.get("desc");
+    const github = data.get("github");
+    const skills = data.get("TeamSkills");
+    const email = data.get("TeamEmail");
 
-   const handleSubmit = async (e) => {
-      e.preventDefault();
-      
-        try {
-          const data = new FormData(e.currentTarget);
-          const name = data.get("name");
-          const desc = data.get("desc");
-          const github = data.get("github");
-          const skills = data.get("skills");
-          const email = data.get("email");
-  
-          const skillsArr = [...skills.split(",")];
-  
-          if (skills.includes(",") && skillsArr.length >= 5) {
-            const response = await fetch("/api/createTeam", {
-              method: "POST",
-              headers: {
-                "content-type": "application/json",
-              },
-              body: JSON.stringify({
-                name,
-                email,
-                github,
-                desc,
-                skills: skillsArr,
-              }),
+    const skillsArr = [...skills.split(",")];
+
+    let tId = toast.loading("Please wait....");
+
+    try {
+      let members = [id];
+      let admins = [id];
+      try {
+        if (skills.includes(",") && skillsArr.length >= 5) {
+          const response = await fetch("/api/createTeam", {
+            method: "POST",
+            headers: {
+              "content-type": "application/json",
+            },
+            body: JSON.stringify({
+              name: name,
+              email: email,
+              members: members,
+              admins: admins,
+              links: [{ name: "Github Link", link: github }],
+              description: desc,
+              skills: skillsArr,
+            }),
+          });
+
+          if (response.status === 201) {
+            toast.update(tId, {
+              render: "Team Created Successsfully!",
+              type: "success",
+              isLoading: false,
+              autoClose: 2000,
+              closeButton: true,
             });
-  
-            if (response.status === 201) {
-              toast.success("Team created!");
-              setInterval(() => {
-                router.push("/teams");
-              }, 3000);
-            }
-          } else {
-            toast.error(
-              "Skills should be ',' separated and Atleast 5 skills should be added!"
-            );
+            setInterval(() => {
+              router.push(`/teams?id=${id}`);
+            }, 3000);
           }
-        } catch (error) {
-          toast.error(error.message);
+        } else {
+          toast.update(tId, {
+            render:
+              "Skills should be ',' separated and Atleast 5 skills should be added!",
+            type: "error",
+            isLoading: false,
+            autoClose: 2000,
+            closeButton: true,
+          });
         }
-      
-    };
-
+      } catch (error) {
+        toast.update(tId, {
+          render: error.message,
+          type: "error",
+          isLoading: false,
+          autoClose: 2000,
+          closeButton: true,
+        });
+      }
+    } catch (error) {
+      toast.update(tId, {
+        render: "Something went wrong!",
+        type: "error",
+        isLoading: false,
+        autoClose: 2000,
+        closeButton: true,
+      });
+    }
+  };
 
   return (
     <>
-      <ToastContainer position="bottom-left" theme="dark" />
+      <ToastContainer position="top-center" theme="dark" />
       <div className="main-div w-1/3 max-[900px]:w-full  p-7 m-auto mt-10 flex flex-col gap-2 justify-center items-center">
         <h1 className="text-center mb-2 section-title text-textPrimary poppins-semibold text-[28px]">
-         Create a new Team
+          Create a new Team
         </h1>
-        <form onSubmit={handleSubmit} className="login-signup-form">
+        <form
+          onSubmit={handleSubmit}
+          className="login-signup-form"
+          id="create-team"
+        >
           <div className="flex flex-wrap gap-2">
             <div className="input-div">
               <input
@@ -105,21 +136,21 @@ export default function createTeam() {
                     setIsNameFocus(true);
                   }
                 }}
-                id="name"
-                name="name"
-                aria-describedby="name"
+                id="TeamName"
+                name="TeamName"
+                aria-describedby="TeamName"
                 className="text-textPrimary"
+                suppressHydrationWarning
                 required
               />
               <label
-                htmlFor="name"
+                htmlFor="TeamName"
                 className="labelLine"
                 style={getStyle(isNameFocus)}
               >
                 Name
               </label>
             </div>
-
           </div>
           <div className="flex flex-wrap gap-2">
             <div className="input-div">
@@ -135,14 +166,16 @@ export default function createTeam() {
                     setIsEmailFocus(true);
                   }
                 }}
-                id="email"
-                name="email"
-                aria-describedby="emailSignup"
+                id="TeamEmail"
+                name="TeamEmail"
+                aria-describedby="TeamEmail"
                 className="text-textPrimary"
+                autoComplete="off"
+                suppressHydrationWarning
                 required
               />
               <label
-                htmlFor="email"
+                htmlFor="TeamEmail"
                 className="labelLine"
                 style={getStyle(isEmailFocus)}
               >
@@ -166,10 +199,12 @@ export default function createTeam() {
                 name="github"
                 aria-describedby="github"
                 className="text-textPrimary"
+                autoComplete="off"
+                suppressHydrationWarning
                 required
               />
               <label
-                htmlFor="githubID"
+                htmlFor="github"
                 className="labelLine"
                 style={getStyle(isghFocus)}
               >
@@ -201,7 +236,9 @@ export default function createTeam() {
                 name="desc"
                 aria-describedby="desc"
                 className="text-textPrimary"
-                minLength={100}
+                maxLength={100}
+                autoComplete="off"
+                suppressHydrationWarning
                 required
               ></textarea>
               <label
@@ -233,15 +270,17 @@ export default function createTeam() {
                     setIsSkillsFocus(true);
                   }
                 }}
-                id="skills"
-                name="skills"
-                aria-describedby="skills"
+                id="TeamSkills"
+                name="TeamSkills"
+                aria-describedby="TeamSkills"
                 className="text-textPrimary"
+                autoComplete="off"
                 title="Atleast 5 Skills should be added!"
+                suppressHydrationWarning
                 required
               ></textarea>
               <label
-                htmlFor="skills"
+                htmlFor="TeamSkills"
                 className="labelLine"
                 style={getStyle(isSkillsFocus)}
               >
@@ -251,9 +290,10 @@ export default function createTeam() {
           </div>
 
           <button
+            suppressHydrationWarning
             className="submit text-textPrimary hover:bg-textBgPrimaryHv hover:text-black hover:text-center px-1 py-2 w-[10rem] border-[1px] rounded-md border-textBgPrimaryHv"
             type="submit"
-            id="submit"
+            id="create-team-submit"
           >
             Submit
           </button>

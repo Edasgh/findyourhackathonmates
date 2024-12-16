@@ -8,9 +8,17 @@ export const GET = async () => {
 
   try {
     const user = await getLoggedInUser();
-    const resp= NextResponse.json(user, { status: 200 });
-    resp.cookies.set("user",JSON.stringify(user));
-    return resp;
+    if(user)
+    {
+      const resp= NextResponse.json(user, { status: 200 });
+      return resp;
+    }
+    else
+    {
+       return new NextResponse("Something went wrong!", {
+         status: 500,
+       });
+    }
   } catch (error) {
     console.log(error);
     return new NextResponse(error.message, {

@@ -5,18 +5,34 @@ import { faEye, faEyeSlash } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import { useRouter } from "next/navigation";
-import { useState, use } from "react";
+import { useState, use, useLayoutEffect } from "react";
 
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import LoadingComponent from "../loading";
 
 export default function ResetPassword({ searchParams }) {
   const router = useRouter();
-
   const { id } = use(searchParams);
-  if (!id) {
-    return <NotFound />;
-  }
+
+ const [loading, setLoading] = useState(true);
+ const [userDetails, setUserDetails] = useState(null);
+ const res = async () => {
+   try {
+     const resp = await fetch("/api/profile");
+     const data = await resp.json();
+
+     setUserDetails(data);
+     setLoading(false);
+   } catch (err) {
+     setUserDetails(null);
+     setLoading(false);
+   }
+ };
+ useLayoutEffect(() => {
+   res();
+ }, []);
+ 
 
   // access password & confirm password value
   const [password, setPassword] = useState("");
@@ -60,7 +76,7 @@ export default function ResetPassword({ searchParams }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    let tId = toast.loading("Please wait....");
     if (isSame) {
       try {
         const data = new FormData(e.currentTarget);
@@ -79,22 +95,52 @@ export default function ResetPassword({ searchParams }) {
         });
 
         if (response.status === 200) {
-          toast.success("Password updated successfully!");
-          setInterval(() => {
-            router.push("/login");
-          }, 3000);
+          toast.update(tId, {
+            render: "Password updated successfully!",
+            type: "success",
+            isLoading: false,
+            autoClose: 2000,
+            closeButton: true,
+          });
+          if (userDetails !== null) {
+            setInterval(() => {
+              router.push("/profile");
+            }, 3000);
+          } else {
+            setInterval(() => {
+              router.push("/login");
+            }, 3000);
+          }
         }
       } catch (error) {
-        toast.error("Something went wrong!");
+        toast.update(tId, {
+          render: "Something went wrong!",
+          type: "error",
+          isLoading: false,
+          autoClose: 2000,
+          closeButton: true,
+        });
+
         console.error(error.message);
       }
     } else {
-      toast.error("Password & Confirm password should be same!");
+      toast.update(tId, {
+        render: "Password & Confirm password should be same!",
+        type: "error",
+        isLoading: false,
+        autoClose: 2000,
+        closeButton: true,
+      });
     }
   };
 
   return (
-    <>
+   <>
+   {loading && (
+    <LoadingComponent/>
+   )}
+   {id?(
+     <>
       <ToastContainer position="bottom-left" theme="dark" />
       <div className="main-div w-1/3 max-[900px]:w-full p-7 m-auto mt-10 flex flex-col gap-3 justify-center items-center">
         <h1 className="text-center section-title text-textPrimary poppins-semibold text-[28px]">
@@ -221,5 +267,11 @@ export default function ResetPassword({ searchParams }) {
         </form>
       </div>
     </>
+   ):(
+    <>
+    <NotFound/>
+    </>
+   )}
+   </>
   );
 }

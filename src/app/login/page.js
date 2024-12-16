@@ -1,6 +1,6 @@
 "use client";
 
-import { redirect, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useLayoutEffect, useState } from "react";
 import Link from "next/link";
 
@@ -9,25 +9,38 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { getToken } from "@/lib/verifyToken";
 
-
+import LoadingComponent from "../loading";
 
 export default function Login() {
-  
-  useLayoutEffect(() => {
-    const savedToken = getToken();
-    if (savedToken) redirect("/");
-  }, []);
+  //router
+  const router = useRouter();
+
+  const [loading,setLoading]=useState(true);
+
+   useLayoutEffect(() => {
+     const res = async () => {
+       try {
+         const resp = await fetch("/api/profile");
+         const data = await resp.json();
+
+         if (data) {
+           router.push("/");
+         }
+       } catch (err) {
+         console.log(err);
+         setLoading(false);
+       }
+     };
+     res();
+   }, []);
+
 
   //to show floating labels if focused on input fields
   const [isPasswordFocus, setIsPasswordFocus] = useState(false);
   const [isEmailFocus, setIsEmailFocus] = useState(false);
   // to show / hide the password
   const [isShown, setIsShown] = useState(false);
-
-  //router
-  const router = useRouter();
 
   const onFocusStyle = {
     padding: "0 0.5rem",
@@ -69,11 +82,14 @@ export default function Login() {
           type: "success",
           isLoading: false,
           autoClose: 2000,
+          closeButton: true,
         });
         setInterval(() => {
           router.push("/");
+          setInterval(() => {
+            window.location.reload();
+          }, 800);
         }, 3000);
-        window.location.reload();
       }
     } catch (error) {
       toast.update(tId, {
@@ -81,19 +97,24 @@ export default function Login() {
         type: "error",
         isLoading: false,
         autoClose: 2000,
+        closeButton: true,
       });
       console.error(error.message);
     }
   };
 
   return (
-    <>
-      <ToastContainer position="bottom-left" theme="dark" />
+  <>
+  {loading?(<>
+  <LoadingComponent/>
+   </>):(
+     <>
+      <ToastContainer position="top-center" theme="dark" />
       <div className="main-div w-1/3 max-[900px]:w-full p-7 m-auto mt-10 flex flex-col gap-2 justify-center items-center">
         <h1 className="section-title poppins-semibold text-textPrimary text-[28px]">
           Welcome Back!
         </h1>
-        <form onSubmit={handleSubmit} className="login-signup-form">
+        <form onSubmit={handleSubmit} className="login-signup-form" id="login">
           <div className="input-div">
             <input
               type="email"
@@ -111,6 +132,7 @@ export default function Login() {
               name="emailLogin"
               aria-describedby="emailLogin"
               className="text-textPrimary"
+              suppressHydrationWarning
               required
             />
             <label
@@ -138,6 +160,7 @@ export default function Login() {
               name="passwordLogin"
               id="passwordLogin"
               minLength={8}
+              suppressHydrationWarning
               required
             />
             <span
@@ -180,11 +203,14 @@ export default function Login() {
             className="login-submit hover:bg-textBgPrimaryHv text-textPrimary hover:text-black hover:text-center px-1 py-2 w-[10rem] border-[1px] rounded-md border-textBgPrimaryHv"
             type="submit"
             id="login-btn"
+            suppressHydrationWarning
           >
             Log In
           </button>
         </form>
       </div>
     </>
+  )}
+  </>
   );
 }

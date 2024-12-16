@@ -3,6 +3,7 @@ import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
+
 import { dbConn } from "@/lib/mongo";
 
 
@@ -35,3 +36,4 @@ export default async function RootLayout({ children }) {
     </html>
   );
 }
+

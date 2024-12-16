@@ -1,5 +1,5 @@
 "use client";
-import {  useRouter } from "next/navigation";
+
 import { useLayoutEffect, useState } from "react";
 import Link from "next/link";
 
@@ -12,24 +12,36 @@ import {
   faXmark,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-
-import { getToken } from "@/lib/verifyToken";
+import { useRouter } from "next/navigation";
 
 export default function Navbar() {
-    const router = useRouter();
+  const router = useRouter();
+  const [userDetails, setUserDetails] = useState(null);
   const [token, setToken] = useState(null);
-  useLayoutEffect(() => {
-    const savedToken = getToken();
-    if(savedToken) setToken(savedToken);
+  const res = async (cache) => {
+    try {
+       const resp = await fetch("/api/profile", { cache: cache });
+       const data = await resp.json();
+       setUserDetails(data);
+       setToken(true);
+    } catch (error) {
+      setToken(null);
+    }
+   
     
+  };
+  useLayoutEffect(() => {
+    res("no-store");
   }, []);
 
-  const handleLogOut=async()=>{
-       const response = await fetch("/api/logout");
-       if (response.status === 200) {
-         window.location.reload();
-       }
-  }
+  const handleLogOut = async () => {
+    const response = await fetch("/api/logout");
+    setUserDetails(null);
+    setToken(null);
+    if (response.status === 200) {
+      window.location.reload();
+    }
+  };
 
   const [opened, setOpened] = useState(false);
   const [colB1, setColB1] = useState(false);
@@ -57,6 +69,7 @@ export default function Navbar() {
                 router.push("/login");
               }}
               className="w-fit border-[1px] border-textBgPrimaryHv hover:bg-textBgPrimaryHv text-textPrimary hover:text-black  px-8 py-3 rounded-md cursor-pointer"
+              suppressHydrationWarning
             >
               Login
             </button>
@@ -120,7 +133,11 @@ export default function Navbar() {
           </Link>
           <Link
             className="text-textPrimary hover:bg-textBgPrimaryHv hover:text-black hover:text-center flex gap-4 items-center px-1 py-2"
-            href="/createTeam"
+            href={
+              userDetails !== null
+                ? `/createTeam?id=${userDetails._id}`
+                : "/createTeam"
+            }
             style={menuTransition}
             onMouseOver={() => {
               setColB2(true);
@@ -139,7 +156,11 @@ export default function Navbar() {
           </Link>
           <Link
             className="text-textPrimary hover:bg-textBgPrimaryHv hover:text-black hover:text-center flex gap-4 items-center px-1 py-2"
-            href="/teamMates"
+            href={
+              userDetails !== null
+                ? `/teamMates?id=${userDetails._id}`
+                : `/teamMates`
+            }
             style={menuTransition}
             onMouseOver={() => {
               setColB3(true);
@@ -158,7 +179,9 @@ export default function Navbar() {
           </Link>
           <Link
             className="text-textPrimary hover:bg-textBgPrimaryHv hover:text-black hover:text-center flex gap-4 items-center px-1 py-2"
-            href="/teams"
+            href={
+              userDetails !== null ? `/teams?id=${userDetails._id}` : "/teams"
+            }
             style={menuTransition}
             onMouseOver={() => {
               setColB4(true);

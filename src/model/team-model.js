@@ -2,8 +2,8 @@ import mongoose from "mongoose";
 
 const teamModel = mongoose.Schema(
   {
-    name: { type: String, minlength: 50, required: true },
-    description: { type: String, minlength: 100, required: true },
+    name: { type: String, required: true },
+    description: { type: String, maxlength: 100, required: true },
     email: { type: String, required: true },
     members: {
       type: Array,

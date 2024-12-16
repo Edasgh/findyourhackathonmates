@@ -1,17 +1,70 @@
-import React from 'react'
+"use client";
 
-import CustomAvatar from './CustomAvatar'
-import SkillsCloud from './SkillsCloud'
+import Link from "next/link";
+import React, { useState } from "react";
 
-const TeamMate = ({name,bio,skills,githubID,email,index}) => {
+import CustomAvatar from "./CustomAvatar";
+import SkillsCloud from "./SkillsCloud";
+
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faGithub } from "@fortawesome/free-brands-svg-icons";
+import { faEnvelope, faPeopleGroup } from "@fortawesome/free-solid-svg-icons";
+
+const TeamMate = ({ name, bio, skills, githubID, email, index }) => {
+  const [isOpen,setIsOpen] = useState(false);
   return (
     <div
       key={index}
-      className=" max-[800px]:h-[26rem] min-[800.1px]:h-[28rem] max-[800px]:w-[19rem] min-[800.1px]:w-[22rem] p-7 flex flex-col gap-4 justify-center items-center border-[1px] border-textSecondary rounded-2xl"
+      className=" max-[800px]:max-h-[25rem] min-[800.1px]:max-h-[28rem] min-h-[20rem] max-[800px]:w-[19rem] min-[800.1px]:w-[20rem] p-7 flex flex-col gap-3 justify-start items-start border-[1px] border-textSecondary rounded-2xl"
     >
-      <SkillsCloud skilsArr={skills} />
+      <div className="flex gap-3 justify-center items-center">
+        <CustomAvatar name={name} />
+        <p className="text-textPrimary font-semibold text-lg">{name}</p>
+      </div>
+      <div
+        style={isOpen ? { display: "none" } : { display: "flex" }}
+        className="flex flex-wrap gap-4"
+      >
+        <Link href={`https://github.com/${githubID}`} target="_blank">
+          <button className="text-textPrimary flex gap-0 justify-center items-center text-xs px-2 py-1 rounded-md dashing-muted">
+            <FontAwesomeIcon className="text-2xl" icon={faGithub} />
+            &nbsp;&nbsp; Github
+          </button>
+        </Link>
+        <Link
+          href={`mailTo:${email}?subject=Hackathon%20Team%20Joining%20Invitation`}
+          target="_blank"
+          className="flex gap-2 justify-center items-center"
+        >
+          <button title="Invite to your team" className="text-textPrimary flex gap-0 justify-center items-center text-xs px-2 py-1 rounded-md dashing-muted">
+            <FontAwesomeIcon
+              className="text-2xl text-textPrimary"
+              icon={faEnvelope}
+            />
+            &nbsp;&nbsp; Invite
+          </button>
+        </Link>
+      </div>
+      <p
+        className="text-textSecondary font-light text-[.9rem] cursor-pointer text-center"
+        onClick={() => {
+          setIsOpen(!isOpen);
+          
+        }}
+      >
+        {isOpen ? "Hide" : "See"} Bio
+      </p>
+      <p
+        style={isOpen ? { display: "initial" } : { display: "none" }}
+        className="text-textBgPrimaryHv font-light text-xs"
+      >
+        {bio}
+      </p>
+      <div style={isOpen ? { display: "none" } : { display: "initial" }}>
+        <SkillsCloud skilsArr={skills} />
+      </div>
     </div>
   );
-}
+};
 
-export default TeamMate
+export default TeamMate;

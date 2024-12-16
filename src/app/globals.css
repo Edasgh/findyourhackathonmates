@@ -155,6 +155,13 @@ a {
    box-shadow: 0 0 24px var(--text-secondary);
 }
 
+.dashing-muted{
+  box-shadow: 0 0 3px var(--text-secondary);
+}
+.dashing-muted:hover {
+   box-shadow: 0 0 18px var(--text-secondary);
+}
+
 @media screen and (max-width: 500px) {
   .login-signup-form {
     gap: 0rem;
