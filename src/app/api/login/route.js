@@ -27,6 +27,11 @@ export const POST = async (request) => {
       const response = NextResponse.json({message:"Logged in successfully!"}, { status: 200 });
       response.cookies.set("token",user.token,{httpOnly:true});
       return response;
+    }else
+    {
+       return new NextResponse("User doesn't exist", {
+         status: 500,
+       });
     }
   } catch (error) {
     console.log(error);

@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const teamModel = mongoose.Schema(
   {
-    name: { type: String, required: true },
+    name: { type: String, required: true, unique: true },
     description: { type: String, maxlength: 100, required: true },
     email: { type: String, required: true },
     members: {
@@ -13,12 +13,9 @@ const teamModel = mongoose.Schema(
       },
       required: true,
     },
-    admins: {
-      type: Array,
-      items: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
-      },
+    admin: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
       required: true,
     },
     skills: {

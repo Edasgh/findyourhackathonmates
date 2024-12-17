@@ -32,7 +32,7 @@ export const POST = async (request) => {
         },
       });
 
-      const mailDetails = {};
+  
       // sending email with nodemailer
       const info = await transporter.sendMail({
         from: `"Hackathonmates ${process.env.GOOGLE_ACCOUNT_USER}"`, // sender address

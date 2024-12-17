@@ -16,27 +16,22 @@ import { useRouter } from "next/navigation";
 
 export default function Navbar() {
   const router = useRouter();
-  const [userDetails, setUserDetails] = useState(null);
   const [token, setToken] = useState(null);
-  const res = async (cache) => {
+  const res = async () => {
     try {
-       const resp = await fetch("/api/profile", { cache: cache });
-       const data = await resp.json();
-       setUserDetails(data);
-       setToken(true);
+      const resp = await fetch("/api/profile");
+      const data = await resp.json();
+      setToken(true);
     } catch (error) {
       setToken(null);
     }
-   
-    
   };
   useLayoutEffect(() => {
-    res("no-store");
+    res();
   }, []);
 
   const handleLogOut = async () => {
     const response = await fetch("/api/logout");
-    setUserDetails(null);
     setToken(null);
     if (response.status === 200) {
       window.location.reload();
@@ -133,11 +128,7 @@ export default function Navbar() {
           </Link>
           <Link
             className="text-textPrimary hover:bg-textBgPrimaryHv hover:text-black hover:text-center flex gap-4 items-center px-1 py-2"
-            href={
-              userDetails !== null
-                ? `/createTeam?id=${userDetails._id}`
-                : "/createTeam"
-            }
+            href="/createTeam"
             style={menuTransition}
             onMouseOver={() => {
               setColB2(true);
@@ -156,11 +147,7 @@ export default function Navbar() {
           </Link>
           <Link
             className="text-textPrimary hover:bg-textBgPrimaryHv hover:text-black hover:text-center flex gap-4 items-center px-1 py-2"
-            href={
-              userDetails !== null
-                ? `/teamMates?id=${userDetails._id}`
-                : `/teamMates`
-            }
+            href="/teamMates"
             style={menuTransition}
             onMouseOver={() => {
               setColB3(true);
@@ -179,9 +166,7 @@ export default function Navbar() {
           </Link>
           <Link
             className="text-textPrimary hover:bg-textBgPrimaryHv hover:text-black hover:text-center flex gap-4 items-center px-1 py-2"
-            href={
-              userDetails !== null ? `/teams?id=${userDetails._id}` : "/teams"
-            }
+            href="/teams"
             style={menuTransition}
             onMouseOver={() => {
               setColB4(true);

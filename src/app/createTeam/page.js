@@ -3,16 +3,36 @@
 import NotFound from "@/components/not-found";
 
 import { useRouter } from "next/navigation";
-import { use, useState } from "react";
+import { useLayoutEffect, useState } from "react";
 
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import LoadingComponent from "../loading";
 
-export default function createTeam({ searchParams }) {
-  const { id } = use(searchParams);
-  if (!id) {
-    return <NotFound />;
-  }
+export default function createTeam() {
+  const [loading, setLoading] = useState(true);
+  const [userDetails, setUserDetails] = useState(null);
+  const getUserDetails = async () => {
+    setLoading(true);
+    try {
+      const resp = await fetch("/api/profile");
+      const data = await resp.json();
+
+      if (data) {
+        setUserDetails(data);
+        setLoading(false);
+      }
+    } catch (err) {
+      console.log(err);
+      setUserDetails(null);
+      setLoading(false);
+    }
+  };
+
+  useLayoutEffect(() => {
+    getUserDetails();
+  }, []);
+
   // to show floating labels if focused on input fields
   const [isNameFocus, setIsNameFocus] = useState(false);
   const [isEmailFocus, setIsEmailFocus] = useState(false);
@@ -48,8 +68,7 @@ export default function createTeam({ searchParams }) {
     let tId = toast.loading("Please wait....");
 
     try {
-      let members = [id];
-      let admins = [id];
+      let members = [userDetails._id];
       try {
         if (skills.includes(",") && skillsArr.length >= 5) {
           const response = await fetch("/api/createTeam", {
@@ -61,7 +80,7 @@ export default function createTeam({ searchParams }) {
               name: name,
               email: email,
               members: members,
-              admins: admins,
+              admin: userDetails._id,
               links: [{ name: "Github Link", link: github }],
               description: desc,
               skills: skillsArr,
@@ -77,8 +96,11 @@ export default function createTeam({ searchParams }) {
               closeButton: true,
             });
             setInterval(() => {
-              router.push(`/teams?id=${id}`);
+              router.push(`/teams`);
             }, 3000);
+          }else
+          {
+            throw new Error("Something went wrong!");
           }
         } else {
           toast.update(tId, {
@@ -92,7 +114,7 @@ export default function createTeam({ searchParams }) {
         }
       } catch (error) {
         toast.update(tId, {
-          render: error.message,
+          render: "Something went wrong!",
           type: "error",
           isLoading: false,
           autoClose: 2000,
@@ -112,193 +134,209 @@ export default function createTeam({ searchParams }) {
 
   return (
     <>
-      <ToastContainer position="top-center" theme="dark" />
-      <div className="main-div w-1/3 max-[900px]:w-full  p-7 m-auto mt-10 flex flex-col gap-2 justify-center items-center">
-        <h1 className="text-center mb-2 section-title text-textPrimary poppins-semibold text-[28px]">
-          Create a new Team
-        </h1>
-        <form
-          onSubmit={handleSubmit}
-          className="login-signup-form"
-          id="create-team"
-        >
-          <div className="flex flex-wrap gap-2">
-            <div className="input-div">
-              <input
-                type="text"
-                onFocus={() => {
-                  setIsNameFocus(true);
-                }}
-                onBlur={(e) => {
-                  if (e.target.value === "") {
-                    setIsNameFocus(false);
-                  } else {
-                    setIsNameFocus(true);
-                  }
-                }}
-                id="TeamName"
-                name="TeamName"
-                aria-describedby="TeamName"
-                className="text-textPrimary"
-                suppressHydrationWarning
-                required
-              />
-              <label
-                htmlFor="TeamName"
-                className="labelLine"
-                style={getStyle(isNameFocus)}
-              >
-                Name
-              </label>
-            </div>
-          </div>
-          <div className="flex flex-wrap gap-2">
-            <div className="input-div">
-              <input
-                type="email"
-                onFocus={() => {
-                  setIsEmailFocus(true);
-                }}
-                onBlur={(e) => {
-                  if (e.target.value === "") {
-                    setIsEmailFocus(false);
-                  } else {
-                    setIsEmailFocus(true);
-                  }
-                }}
-                id="TeamEmail"
-                name="TeamEmail"
-                aria-describedby="TeamEmail"
-                className="text-textPrimary"
-                autoComplete="off"
-                suppressHydrationWarning
-                required
-              />
-              <label
-                htmlFor="TeamEmail"
-                className="labelLine"
-                style={getStyle(isEmailFocus)}
-              >
-                Email
-              </label>
-            </div>
-            <div className="input-div">
-              <input
-                type="text"
-                onFocus={() => {
-                  setIsghFocus(true);
-                }}
-                onBlur={(e) => {
-                  if (e.target.value === "") {
-                    setIsghFocus(false);
-                  } else {
-                    setIsghFocus(true);
-                  }
-                }}
-                id="github"
-                name="github"
-                aria-describedby="github"
-                className="text-textPrimary"
-                autoComplete="off"
-                suppressHydrationWarning
-                required
-              />
-              <label
-                htmlFor="github"
-                className="labelLine"
-                style={getStyle(isghFocus)}
-              >
-                Github Link
-              </label>
-            </div>
-          </div>
-          <span className="text-xs mb-2.5 text-textBgPrimaryHv hidden min-[480px]:block w-auto max-[480px]:max-w-56">
-            *Skills should be ',' separated. Eg.: React.js, Node.js,
-            Docker,MongoDB*
-            <br />
-            <br />
-            *Atleast 5 skills should be added*
-          </span>
-          <div className="flex flex-wrap gap-2">
-            <div className="input-div">
-              <textarea
-                onFocus={() => {
-                  setIsDescFocus(true);
-                }}
-                onBlur={(e) => {
-                  if (e.target.value === "") {
-                    setIsDescFocus(false);
-                  } else {
-                    setIsDescFocus(true);
-                  }
-                }}
-                id="desc"
-                name="desc"
-                aria-describedby="desc"
-                className="text-textPrimary"
-                maxLength={100}
-                autoComplete="off"
-                suppressHydrationWarning
-                required
-              ></textarea>
-              <label
-                htmlFor="desc"
-                className="labelLine"
-                style={
-                  isDescFocus ? { ...onFocusStyle } : { display: "inherit" }
-                }
-              >
-                Description
-              </label>
-            </div>
-            <span className="text-xs mb-2.5 text-textBgPrimaryHv hidden max-[480px]:block w-auto max-[500px]:max-w-56">
-              *Skills should be ',' separated. Eg.: React.js, Node.js,
-              Docker,MongoDB*
-              <br />
-              <br />
-              *Atleast 5 skills should be added*
-            </span>
-            <div className="input-div">
-              <textarea
-                onFocus={() => {
-                  setIsSkillsFocus(true);
-                }}
-                onBlur={(e) => {
-                  if (e.target.value === "") {
-                    setIsSkillsFocus(false);
-                  } else {
-                    setIsSkillsFocus(true);
-                  }
-                }}
-                id="TeamSkills"
-                name="TeamSkills"
-                aria-describedby="TeamSkills"
-                className="text-textPrimary"
-                autoComplete="off"
-                title="Atleast 5 Skills should be added!"
-                suppressHydrationWarning
-                required
-              ></textarea>
-              <label
-                htmlFor="TeamSkills"
-                className="labelLine"
-                style={getStyle(isSkillsFocus)}
-              >
-                Skills
-              </label>
-            </div>
-          </div>
+      {loading ? (
+        <LoadingComponent />
+      ) : (
+        <>
+          {userDetails !== null ? (
+            <>
+              <ToastContainer position="top-center" theme="dark" />
+              <div className="main-div w-1/3 max-[900px]:w-full  p-7 m-auto mt-10 flex flex-col gap-2 justify-center items-center">
+                <h1 className="text-center mb-2 section-title text-textPrimary poppins-semibold text-[28px]">
+                  Create a new Team
+                </h1>
+                <form
+                  onSubmit={handleSubmit}
+                  className="login-signup-form"
+                  id="create-team"
+                >
+                  <div className="flex flex-wrap gap-2">
+                    <div className="input-div">
+                      <input
+                        type="text"
+                        onFocus={() => {
+                          setIsNameFocus(true);
+                        }}
+                        onBlur={(e) => {
+                          if (e.target.value === "") {
+                            setIsNameFocus(false);
+                          } else {
+                            setIsNameFocus(true);
+                          }
+                        }}
+                        id="TeamName"
+                        name="TeamName"
+                        aria-describedby="TeamName"
+                        className="text-textPrimary"
+                        suppressHydrationWarning
+                        required
+                      />
+                      <label
+                        htmlFor="TeamName"
+                        className="labelLine"
+                        style={getStyle(isNameFocus)}
+                      >
+                        Name
+                      </label>
+                    </div>
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    <div className="input-div">
+                      <input
+                        type="email"
+                        onFocus={() => {
+                          setIsEmailFocus(true);
+                        }}
+                        onBlur={(e) => {
+                          if (e.target.value === "") {
+                            setIsEmailFocus(false);
+                          } else {
+                            setIsEmailFocus(true);
+                          }
+                        }}
+                        id="TeamEmail"
+                        name="TeamEmail"
+                        aria-describedby="TeamEmail"
+                        className="text-textPrimary"
+                        autoComplete="off"
+                        suppressHydrationWarning
+                        required
+                      />
+                      <label
+                        htmlFor="TeamEmail"
+                        className="labelLine"
+                        style={getStyle(isEmailFocus)}
+                      >
+                       Contact Email
+                      </label>
+                    </div>
+                    <div className="input-div">
+                      <input
+                        type="text"
+                        onFocus={() => {
+                          setIsghFocus(true);
+                        }}
+                        onBlur={(e) => {
+                          if (e.target.value === "") {
+                            setIsghFocus(false);
+                          } else {
+                            setIsghFocus(true);
+                          }
+                        }}
+                        id="github"
+                        name="github"
+                        aria-describedby="github"
+                        className="text-textPrimary"
+                        autoComplete="off"
+                        suppressHydrationWarning
+                        required
+                      />
+                      <label
+                        htmlFor="github"
+                        className="labelLine"
+                        style={getStyle(isghFocus)}
+                      >
+                        Github Link
+                      </label>
+                    </div>
+                  </div>
+                  <span className="text-xs mb-2.5 text-textBgPrimaryHv hidden min-[480px]:block w-auto max-[480px]:max-w-56">
+                    *Skills should be ',' separated. Eg.: React.js, Node.js,
+                    Docker,MongoDB*
+                    <br />
+                    <br />
+                    *Atleast 5 skills should be added*
+                  </span>
+                  <div className="flex flex-wrap gap-2">
+                    <div className="input-div">
+                      <textarea
+                        onFocus={() => {
+                          setIsDescFocus(true);
+                        }}
+                        onBlur={(e) => {
+                          if (e.target.value === "") {
+                            setIsDescFocus(false);
+                          } else {
+                            setIsDescFocus(true);
+                          }
+                        }}
+                        id="desc"
+                        name="desc"
+                        aria-describedby="desc"
+                        className="text-textPrimary"
+                        maxLength={100}
+                        autoComplete="off"
+                        suppressHydrationWarning
+                        required
+                      ></textarea>
+                      <label
+                        htmlFor="desc"
+                        className="labelLine"
+                        style={
+                          isDescFocus
+                            ? { ...onFocusStyle }
+                            : { display: "inherit" }
+                        }
+                      >
+                        Description
+                      </label>
+                    </div>
+                    <span className="text-xs mb-2.5 text-textBgPrimaryHv hidden max-[480px]:block w-auto max-[500px]:max-w-56">
+                      *Skills should be ',' separated. Eg.: React.js, Node.js,
+                      Docker,MongoDB*
+                      <br />
+                      <br />
+                      *Atleast 5 skills should be added*
+                    </span>
+                    <div className="input-div">
+                      <textarea
+                        onFocus={() => {
+                          setIsSkillsFocus(true);
+                        }}
+                        onBlur={(e) => {
+                          if (e.target.value === "") {
+                            setIsSkillsFocus(false);
+                          } else {
+                            setIsSkillsFocus(true);
+                          }
+                        }}
+                        id="TeamSkills"
+                        name="TeamSkills"
+                        aria-describedby="TeamSkills"
+                        className="text-textPrimary"
+                        autoComplete="off"
+                        title="Atleast 5 Skills should be added!"
+                        suppressHydrationWarning
+                        required
+                      ></textarea>
+                      <label
+                        htmlFor="TeamSkills"
+                        className="labelLine"
+                        style={getStyle(isSkillsFocus)}
+                      >
+                        Skills
+                      </label>
+                    </div>
+                  </div>
 
-          <button
-            suppressHydrationWarning
-            className="submit text-textPrimary hover:bg-textBgPrimaryHv hover:text-black hover:text-center px-1 py-2 w-[10rem] border-[1px] rounded-md border-textBgPrimaryHv"
-            type="submit"
-            id="create-team-submit"
-          >
-            Submit
-          </button>
-        </form>
-      </div>
+                  <button
+                    suppressHydrationWarning
+                    className="submit text-textPrimary hover:bg-textBgPrimaryHv hover:text-black hover:text-center px-1 py-2 w-[10rem] border-[1px] rounded-md border-textBgPrimaryHv"
+                    type="submit"
+                    id="create-team-submit"
+                  >
+                    Submit
+                  </button>
+                </form>
+              </div>
+            </>
+          ) : (
+            <>
+              <NotFound />
+            </>
+          )}
+        </>
+      )}
     </>
   );
 }

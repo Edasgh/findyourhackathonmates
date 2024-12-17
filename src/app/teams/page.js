@@ -1,16 +1,33 @@
 "use client";
 
 import NotFound from "@/components/not-found";
-import { use, useLayoutEffect, useState } from "react";
+import {useLayoutEffect, useState } from "react";
 import LoadingComponent from "../loading";
 import Team from "@/components/Team";
 
-export default function Teams({ searchParams }) {
+export default function Teams() {
   const [loading, setLoading] = useState(true);
   const [teamsData, setTeamsData] = useState([]);
+  const [userDetails, setUserDetails] = useState(null);
+  const getUserDetails = async () => {
+    setLoading(true);
+    try {
+      const resp = await fetch("/api/profile");
+      const data = await resp.json();
+
+      if (data) {
+        setUserDetails(data);
+      }
+      return data;
+    } catch (err) {
+      console.log(err);
+      setUserDetails(null);
+    }
+  };
   const res = async () => {
     try {
-      const resp = await fetch("/api/createTeam");
+      const user = await getUserDetails();
+      const resp = await fetch(`/api/createTeam?id=${user._id}`);
       const data = await resp.json();
 
       setTeamsData(data.teams);
@@ -21,10 +38,9 @@ export default function Teams({ searchParams }) {
     }
   };
   useLayoutEffect(() => {
+    getUserDetails();
     res();
   }, []);
-
-  const { id } = use(searchParams);
 
   return (
     <>
@@ -34,10 +50,10 @@ export default function Teams({ searchParams }) {
         </>
       ) : (
         <>
-          {id ? (
+          {userDetails !== null ? (
             <>
               <h1 className="text-center section-title my-12 text-textPrimary poppins-semibold text-4xl">
-               Join new Teams
+                Join new Teams
               </h1>
               <div className="w-full flex flex-wrap gap-3">
                 {teamsData.length !== 0 &&

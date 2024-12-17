@@ -8,10 +8,10 @@ import SkillsCloud from "./SkillsCloud";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGithub } from "@fortawesome/free-brands-svg-icons";
-import { faEnvelope, faPeopleGroup } from "@fortawesome/free-solid-svg-icons";
+import { faEnvelope } from "@fortawesome/free-solid-svg-icons";
 
-const TeamMate = ({ name, bio, skills, githubID, email, index }) => {
-  const [isOpen,setIsOpen] = useState(false);
+const TeamMate = ({ name, bio, skills, githubID, email, index, country }) => {
+  const [isOpen, setIsOpen] = useState(false);
   return (
     <div
       key={index}
@@ -19,8 +19,20 @@ const TeamMate = ({ name, bio, skills, githubID, email, index }) => {
     >
       <div className="flex gap-3 justify-center items-center">
         <CustomAvatar name={name} />
-        <p className="text-textPrimary font-semibold text-lg">{name}</p>
+        <p
+          className="text-textPrimary font-semibold text-lg"
+          suppressHydrationWarning
+        >
+          {name}
+        </p>
       </div>
+      <p
+        className="text-textPrimary font-light text-xs"
+        style={isOpen ? { display: "none" } : { display: "initial" }}
+        suppressHydrationWarning
+      >
+        {country}
+      </p>
       <div
         style={isOpen ? { display: "none" } : { display: "flex" }}
         className="flex flex-wrap gap-4"
@@ -36,7 +48,10 @@ const TeamMate = ({ name, bio, skills, githubID, email, index }) => {
           target="_blank"
           className="flex gap-2 justify-center items-center"
         >
-          <button title="Invite to your team" className="text-textPrimary flex gap-0 justify-center items-center text-xs px-2 py-1 rounded-md dashing-muted">
+          <button
+            title="Invite to your team"
+            className="text-textPrimary flex gap-0 justify-center items-center text-xs px-2 py-1 rounded-md dashing-muted"
+          >
             <FontAwesomeIcon
               className="text-2xl text-textPrimary"
               icon={faEnvelope}
@@ -49,7 +64,6 @@ const TeamMate = ({ name, bio, skills, githubID, email, index }) => {
         className="text-textSecondary font-light text-[.9rem] cursor-pointer text-center"
         onClick={() => {
           setIsOpen(!isOpen);
-          
         }}
       >
         {isOpen ? "Hide" : "See"} Bio
