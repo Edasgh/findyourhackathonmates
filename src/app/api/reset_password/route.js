@@ -20,14 +20,11 @@ export async function POST(request) {
           status: 200,
         });
       } else {
-        return new NextResponse("Something went wrong!", {
-          status: 500,
-        });
+        throw new Error("Something went wrong!");
+    
       }
     } else {
-      return new NextResponse("User not found!", {
-        status: 500,
-      });
+      throw new Error("User not found!");
     }
   } catch (error) {
     console.log(error);

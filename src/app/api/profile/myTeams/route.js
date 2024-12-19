@@ -21,3 +21,26 @@ export const GET = async (request) => {
     });
   }
 };
+
+export const POST = async(request)=>{
+  const {id} = await request.json();
+  await dbConn();
+
+  try {
+    const teamData = await Team.findById(id);
+    if(!teamData)
+    {
+      throw new Error("Something went wrong!");
+    }
+    return NextResponse.json(teamData, { status: 200 });
+    
+
+  } catch (error) {
+     console.log(error);
+     console.log(error.message);
+     return new NextResponse(error.message, {
+       status: 500,
+     });
+  }
+
+}

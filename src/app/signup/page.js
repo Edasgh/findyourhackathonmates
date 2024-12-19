@@ -213,6 +213,7 @@ export default function Signup() {
                     onChange={(e) => {
                       e.preventDefault();
                     }}
+                    title="country"
                     suppressHydrationWarning
                     required
                   >

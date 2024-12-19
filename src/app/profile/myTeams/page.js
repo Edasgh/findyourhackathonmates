@@ -3,8 +3,8 @@ import React from "react";
 const MyTeamsUI = () => {
   return (
     <div className="flex-1 flex items-center justify-center bg-bgSecondary">
-            <p className="text-gray-400">Select a contact to start chatting</p>
-          </div>
+      <p className="text-gray-400">Select a chat to get started</p>
+    </div>
   );
 };
 
@@ -18,7 +18,14 @@ export default MyTeamsUI;
 // import SendMessage from "./components/SendMessage";
 
 // const ChatUI = () => {
-//   const [selectedContact, setSelectedContact] = useState(null);
+//   const [selectedContact, setSelectedContact] = useState({
+//     id: 1,
+//     name: "John Smith",
+//     lastMessage: "See you tomorrow!",
+//     avatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde",
+//     online: true,
+//     lastSeen: "Just now",
+//   });
 //   const [newMessage, setNewMessage] = useState("");
 
 //   const contacts = [
@@ -78,12 +85,8 @@ export default MyTeamsUI;
 //   };
 
 //   return (
-//     <div className="mt-12 border-t-[2.5px] border-bgSecondary flex w-screen h-screen">
-     
-
-//       {/* Main Chat Area */}
 //       <div className="flex-1 flex flex-col">
-//         {selectedContact ? (
+//         {selectedContact && (
 //           <>
 //             {/* Chat Header */}
 //             <div className="p-4 bg-bgPrimary border-b-[.1px] border-bgSecondary flex items-center">
@@ -150,13 +153,9 @@ export default MyTeamsUI;
 //               <SendMessage onSendMsg={handleSendMessage} />
 //             </div>
 //           </>
-//         ) : (
-//           <div className="flex-1 flex items-center justify-center bg-bgSecondary">
-//             <p className="text-gray-400">Select a contact to start chatting</p>
-//           </div>
 //         )}
 //       </div>
-//     </div>
+
 //   );
 // };
 
