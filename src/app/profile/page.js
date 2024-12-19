@@ -28,18 +28,20 @@ export default function Profile() {
     <>
     {loading?(
       <>
+      <div className="w-screen" >
        <LoadingComponent/>
+      </div>
       </>
     ):(
       <>
       {userDetails===null ? (
-        <>
+        <div className="w-screen">
               <NotFound/>
-        </>
+        </div>
       ):(
-        <>
+        <div className="w-screen">
              
-        </>
+        </div>
       )}
 
       </>

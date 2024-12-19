@@ -1,5 +1,6 @@
 import { dbConn } from "@/lib/mongo";
 import Team from "@/model/team-model";
+import { NextResponse } from "next/server";
 
 export const GET = async (request) => {
   await dbConn();

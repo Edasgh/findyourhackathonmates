@@ -1,0 +1,195 @@
+import React, { useState } from "react";
+import { FiSend, FiSearch } from "react-icons/fi";
+import { BsCircleFill } from "react-icons/bs";
+
+const ChatUI = () => {
+  const [selectedContact, setSelectedContact] = useState(null);
+  const [newMessage, setNewMessage] = useState("");
+
+  const contacts = [
+    {
+      id: 1,
+      name: "John Smith",
+      lastMessage: "See you tomorrow!",
+      avatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde",
+      online: true,
+      lastSeen: "Just now"
+    },
+    {
+      id: 2,
+      name: "Emma Wilson",
+      lastMessage: "Thanks for your help",
+      avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330",
+      online: false,
+      lastSeen: "2 hours ago"
+    },
+    {
+      id: 3,
+      name: "Michael Chen",
+      lastMessage: "Great idea!",
+      avatar: "https://images.unsplash.com/photo-1527980965255-d3b416303d12",
+      online: true,
+      lastSeen: "Just now"
+    }
+  ];
+
+  const messages = [
+    {
+      id: 1,
+      senderId: 1,
+      content: "Hey, how are you?",
+      timestamp: "10:30 AM"
+    },
+    {
+      id: 2,
+      senderId: "me",
+      content: "I'm good! Just finished the project.",
+      timestamp: "10:31 AM"
+    },
+    {
+      id: 3,
+      senderId: 1,
+      content: "That's great! Would you like to discuss the next steps?",
+      timestamp: "10:32 AM"
+    }
+  ];
+
+  const handleSendMessage = (e) => {
+    e.preventDefault();
+    if (newMessage.trim()) {
+      // Handle sending message logic here
+      setNewMessage("");
+    }
+  };
+
+  return (
+    <div className="flex h-screen bg-gray-100">
+      {/* Sidebar */}
+      <div className="w-1/4 bg-white border-r border-gray-200">
+        <div className="p-4 border-b border-gray-200">
+          <div className="relative">
+            <input
+              type="text"
+              placeholder="Search contacts..."
+              className="w-full py-2 pl-10 pr-4 text-gray-700 bg-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+            />
+            <FiSearch className="absolute left-3 top-3 text-gray-400" />
+          </div>
+        </div>
+        <div className="overflow-y-auto h-[calc(100vh-5rem)]">
+          {contacts.map((contact) => (
+            <div
+              key={contact.id}
+              onClick={() => setSelectedContact(contact)}
+              className={`flex items-center p-4 cursor-pointer hover:bg-gray-50 ${
+                selectedContact?.id === contact.id ? "bg-gray-50" : ""
+              }`}
+            >
+              <img
+                src={contact.avatar}
+                alt={contact.name}
+                className="w-12 h-12 rounded-full object-cover"
+              />
+              <div className="ml-4 flex-1">
+                <h3 className="text-gray-800 font-semibold">{contact.name}</h3>
+                <p className="text-gray-600 text-sm truncate">
+                  {contact.lastMessage}
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Main Chat Area */}
+      <div className="flex-1 flex flex-col">
+        {selectedContact ? (
+          <>
+            {/* Chat Header */}
+            <div className="p-4 bg-white border-b border-gray-200 flex items-center">
+              <img
+                src={selectedContact.avatar}
+                alt={selectedContact.name}
+                className="w-10 h-10 rounded-full object-cover"
+              />
+              <div className="ml-4">
+                <h2 className="font-semibold text-gray-800">
+                  {selectedContact.name}
+                </h2>
+                <div className="flex items-center">
+                  <BsCircleFill
+                    className={`w-2 h-2 ${
+                      selectedContact.online ? "text-green-500" : "text-gray-400"
+                    }`}
+                  />
+                  <span className="text-sm text-gray-600 ml-2">
+                    {selectedContact.online ? "Online" : selectedContact.lastSeen}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* Messages */}
+            <div className="flex-1 overflow-y-auto p-4 bg-gray-50">
+              {messages.map((message) => (
+                <div
+                  key={message.id}
+                  className={`flex ${
+                    message.senderId === "me" ? "justify-end" : "justify-start"
+                  } mb-4`}
+                >
+                  <div
+                    className={`max-w-[70%] rounded-lg p-3 ${
+                      message.senderId === "me"
+                        ? "bg-blue-500 text-white"
+                        : "bg-white text-gray-800"
+                    }`}
+                  >
+                    <p>{message.content}</p>
+                    <span
+                      className={`text-xs ${
+                        message.senderId === "me"
+                          ? "text-blue-100"
+                          : "text-gray-500"
+                      } mt-1 block`}
+                    >
+                      {message.timestamp}
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Message Input */}
+            <form
+              onSubmit={handleSendMessage}
+              className="p-4 bg-white border-t border-gray-200"
+            >
+              <div className="flex items-center space-x-2">
+                <textarea
+                  value={newMessage}
+                  onChange={(e) => setNewMessage(e.target.value)}
+                  placeholder="Type a message..."
+                  className="flex-1 p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 resize-none"
+                  rows="1"
+                />
+                <button
+                  type="submit"
+                  className="p-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                >
+                  <FiSend className="w-5 h-5" />
+                </button>
+              </div>
+            </form>
+          </>
+        ) : (
+          <div className="flex-1 flex items-center justify-center bg-gray-50">
+            <p className="text-gray-500">Select a contact to start chatting</p>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+export default ChatUI;

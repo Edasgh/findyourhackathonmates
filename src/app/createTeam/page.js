@@ -7,7 +7,7 @@ import { useLayoutEffect, useState } from "react";
 
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import LoadingComponent from "../loading";
+import LoadingComponent from "@/app/loading";
 
 export default function createTeam() {
   const [loading, setLoading] = useState(true);

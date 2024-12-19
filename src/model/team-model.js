@@ -23,7 +23,17 @@ const teamModel = mongoose.Schema(
       items: { type: String },
       required: true,
     },
-    messages: { type: Array, items: { type: String } },
+    messages: {
+      type: Array,
+      items: {
+        message: { type: String, required: true },
+        sender: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "User",
+          required: true,
+        },
+      },
+    },
     links: {
       type: Array,
       items: {
