@@ -1,7 +1,7 @@
 "use client";
 
 import NotFound from "@/components/not-found";
-import {useLayoutEffect, useState } from "react";
+import { useLayoutEffect, useState } from "react";
 import LoadingComponent from "../loading";
 import Team from "@/components/Team";
 
@@ -56,19 +56,28 @@ export default function Teams() {
                 Join new Teams
               </h1>
               <div className="w-full flex flex-wrap gap-3">
-                {teamsData.length !== 0 &&
+                {teamsData.length !== 0 ? (
                   teamsData.map((t, index) => (
                     <Team
                       key={index}
+                      id={t._id}
                       index={index}
                       desc={t.description}
                       email={t.email}
                       githubLink={t.links[0].link}
                       members={t.members}
+                      admin = {t.admin}
                       name={t.name}
                       skills={t.skills}
                     />
-                  ))}
+                  ))
+                ) : (
+                  <>
+                    <h1 className="text-center w-full m-auto text-gray-500 flex justify-center items-center text-xl poppins-semibold">
+                      No teams to show
+                    </h1>
+                  </>
+                )}
               </div>
             </>
           ) : (

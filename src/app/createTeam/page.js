@@ -68,7 +68,7 @@ export default function createTeam() {
     let tId = toast.loading("Please wait....");
 
     try {
-      let members = [userDetails._id];
+      let members = [{name:userDetails.name,id:userDetails._id}];
       try {
         if (skills.includes(",") && skillsArr.length >= 5) {
           const response = await fetch("/api/createTeam", {
@@ -96,7 +96,7 @@ export default function createTeam() {
               closeButton: true,
             });
             setInterval(() => {
-              router.push(`/teams`);
+              router.push(`/profile/myTeams`);
             }, 3000);
           }else
           {

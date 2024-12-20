@@ -8,8 +8,12 @@ const teamModel = mongoose.Schema(
     members: {
       type: Array,
       items: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
+        name: { type: String, required: true },
+        id: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "User",
+          required: true,
+        },
       },
       required: true,
     },
@@ -28,9 +32,12 @@ const teamModel = mongoose.Schema(
       items: {
         message: { type: String, required: true },
         sender: {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: "User",
-          required: true,
+          name: { type: String, required: true },
+          id: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User",
+            required: true,
+          },
         },
       },
     },

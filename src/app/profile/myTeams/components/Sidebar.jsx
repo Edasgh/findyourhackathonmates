@@ -6,6 +6,7 @@ import useChat from "@/hooks/useChat";
 import Link from "next/link";
 import CustomAvatar from "@/components/CustomAvatar";
 
+
 const Sidebar = () => {
   const { isActive, teamId } = useChat();
   const [loading, setLoading] = useState(true);
@@ -17,9 +18,17 @@ const Sidebar = () => {
       const jsonData = await getUser.json();
       const resp = await fetch(`/api/profile/myTeams?id=${jsonData._id}`);
       const data = await resp.json();
-      setMyTeams(data);
-      setLoading(false);
+      if(resp.status===200)
+      {
+        setMyTeams([...data]);
+        setLoading(false);
+      }
+      else
+      {
+        throw new Error("No teams found!");
+      }
     } catch (error) {
+      console.log(error);
       setMyTeams([]);
       setLoading(false);
     }
@@ -78,7 +87,7 @@ const Sidebar = () => {
                         </h3>
                         <p className="text-gray-400 text-sm truncate">
                           {team.messages.length !== 0 ? (
-                            <>{team.messages[team.messages.length - 1]}</>
+                            <>{team.messages[team.messages.length-1].message}</>
                           ) : (
                             <>
                               {`${team.members.length} ${

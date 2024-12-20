@@ -9,7 +9,7 @@ export const GET = async (request) => {
   const id = params.get("id");
 
   try {
-    const teams = await Team.find({ members: { $in: [id] } });
+    const teams = await Team.find({ "members.id": id });
     if (teams) {
       return NextResponse.json(teams, { status: 200 });
     }
@@ -22,25 +22,21 @@ export const GET = async (request) => {
   }
 };
 
-export const POST = async(request)=>{
-  const {id} = await request.json();
+export const POST = async (request) => {
+  const { id } = await request.json();
   await dbConn();
 
   try {
     const teamData = await Team.findById(id);
-    if(!teamData)
-    {
+    if (!teamData) {
       throw new Error("Something went wrong!");
     }
     return NextResponse.json(teamData, { status: 200 });
-    
-
   } catch (error) {
-     console.log(error);
-     console.log(error.message);
-     return new NextResponse(error.message, {
-       status: 500,
-     });
+    console.log(error);
+    console.log(error.message);
+    return new NextResponse(error.message, {
+      status: 500,
+    });
   }
-
-}
+};

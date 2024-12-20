@@ -85,7 +85,7 @@ export default function Login() {
           closeButton: true,
         });
         setInterval(() => {
-          router.push(`/teams`);
+          router.push(`/profile`);
           setInterval(() => {
             window.location.reload();
           }, 800);

@@ -61,7 +61,7 @@ export const GET = async (request) => {
   const params = new URLSearchParams(new URL(url).search);
   const id = params.get("id");
   try {
-    const teams = await Team.find({ members: { $nin: [id] } });
+    const teams = await Team.find({ "members.id": { $ne: id } });
     if (teams) {
       return NextResponse.json({ teams: teams }, { status: 200 });
     }

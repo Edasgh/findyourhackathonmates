@@ -57,6 +57,7 @@ export default function teamMatesPage() {
                 <TeamMate
                   key={index}
                   index={index}
+                  userId={t._id}
                   name={t.name}
                   bio={t.bio}
                   email={t.email}

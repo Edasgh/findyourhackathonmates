@@ -21,8 +21,10 @@ export default function Navbar() {
     try {
       const resp = await fetch("/api/profile");
       const data = await resp.json();
+
       setToken(true);
     } catch (error) {
+      console.log(error);
       setToken(null);
     }
   };
@@ -34,7 +36,10 @@ export default function Navbar() {
     const response = await fetch("/api/logout");
     setToken(null);
     if (response.status === 200) {
-      window.location.reload();
+      router.push("/");
+      setInterval(() => {
+        window.location.reload();
+      }, 800);
     }
   };
 
@@ -59,15 +64,12 @@ export default function Navbar() {
 
         {token === null || !token ? (
           <>
-            <button
-              onClick={() => {
-                router.push("/login");
-              }}
+            <Link href="/login"
               className="w-fit border-[1px] border-textBgPrimaryHv hover:bg-textBgPrimaryHv text-textPrimary hover:text-black  px-8 py-3 rounded-md cursor-pointer"
               suppressHydrationWarning
             >
               Login
-            </button>
+            </Link>
           </>
         ) : (
           <span className="flex flex-row items-center gap-4">

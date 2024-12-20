@@ -1,14 +1,14 @@
-import { useParams } from 'next/navigation'
-import React, { useMemo } from 'react'
+import { useParams } from "next/navigation";
+import { useMemo } from "react";
 
 const useChat = () => {
-    const params = useParams();
-    const teamId = useMemo(()=>params?.teamId||"",[params?.teamId]);
-    const isActive = useMemo(()=>!!teamId,[teamId])
+  const params = useParams();
+  const teamId = useMemo(() => params?.teamId || "", [params?.teamId]);
+  const isActive = useMemo(() => !!teamId, [teamId]);
   return {
     isActive,
-    teamId
-  }
-}
+    teamId,
+  };
+};
 
-export default useChat
+export default useChat;

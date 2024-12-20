@@ -2,12 +2,11 @@
 
 import { faBell, faMessage, faUser } from "@fortawesome/free-regular-svg-icons";
 import {
-  faPlus,
   faMessage as msg,
   faUser as userIcon,
   faBell as bellIcon,
-  faXmark,
   faBars,
+ 
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
@@ -17,6 +16,23 @@ const ProfileNav = () => {
   const [loading, setLoading] = useState(true);
   const [userDetails, setUserDetails] = useState(null);
   const [opened, setOpened] = useState(true);
+ const [reqs, setReqs] = useState([]);
+   const getJoinRequests = async () => {
+     try {
+       const resp = await fetch("/api/joinRequests");
+       const data = await resp.json();
+       console.log(data);
+       setReqs(data);
+       setInterval(() => {
+         setLoading(false);
+       }, 900);
+     } catch (error) {
+       setReqs([]);
+       setInterval(() => {
+         setLoading(false);
+       }, 900);
+     }
+   };
   const res = async () => {
     try {
       const resp = await fetch("/api/profile");
@@ -31,18 +47,19 @@ const ProfileNav = () => {
   };
   useLayoutEffect(() => {
     res();
+    getJoinRequests();
   }, []);
 
   const [over1, setOver1] = useState(false);
   const [over2, setOver2] = useState(false);
-  // const [over3, setOver3] = useState(false);
+  const [over3, setOver3] = useState(false);
 
   return (
     <>
       {!loading && userDetails !== null && (
         <>
           <div
-            className={`absolute bg-gray-800 text-white w-40 min-h-screen overflow-y-auto transition-transform transform ${
+            className={`absolute bg-gray-800 text-white w-52 min-h-screen overflow-y-auto transition-transform transform ${
               opened && "-translate-x-full"
             }  ease-in-out duration-200 `}
             id="sidebar"
@@ -54,7 +71,7 @@ const ProfileNav = () => {
               </h1>
               <ul className="mt-4">
                 <li
-                  className="mb-2"
+                  className="mb-3"
                   onMouseOver={() => {
                     setOver1(true);
                   }}
@@ -71,7 +88,7 @@ const ProfileNav = () => {
                   </Link>
                 </li>
                 <li
-                  className="mb-2"
+                  className="mb-3"
                   onMouseOver={() => {
                     setOver2(true);
                   }}
@@ -82,6 +99,23 @@ const ProfileNav = () => {
                   <Link href="/profile" className="block hover:text-indigo-400">
                     <FontAwesomeIcon icon={over2 ? userIcon : faUser} />
                     &nbsp;&nbsp; Profile
+                  </Link>
+                </li>
+                <li
+                  className="mb-3"
+                  onMouseOver={() => {
+                    setOver3(true);
+                  }}
+                  onMouseOut={() => {
+                    setOver3(false);
+                  }}
+                >
+                  <Link href="/profile/joinRequests" className="block hover:text-indigo-400">
+                    <FontAwesomeIcon icon={over3 ? bellIcon : faBell} />
+                    &nbsp;&nbsp; Notifications
+                    <span className="mx-2 bg-blue-100 text-blue-800 text-xs font-medium me-2 px-1.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300">
+                      {reqs.length}
+                    </span>
                   </Link>
                 </li>
               </ul>
