@@ -46,7 +46,7 @@ const InviteToTeamModal = ({ open, setOpen, userId, userName, email }) => {
 
   const handleInvite = async (e) => {
     e.preventDefault();
-    let tId = toast.loading("Sending Invite...");
+
     const data = new FormData(e.target);
     const team = JSON.parse(data.get("team"));
     const invitationData = {
@@ -63,28 +63,18 @@ const InviteToTeamModal = ({ open, setOpen, userId, userName, email }) => {
         method: "POST",
         body: JSON.stringify(invitationData),
       });
+
       if (sendInvite.status === 200) {
-        console.log("Invite Sent!");
-        toast.update(tId, {
-          render: "Invite Sent!",
-          type: "success",
-          isLoading: false,
-          autoClose: 1000,
-        });
+        toast.success("Invite Sent!");
+        handleClose();
       } else {
         throw new Error("Invite not sent!");
       }
     } catch (error) {
       console.log(error);
       console.log(error.message);
-      toast.update(tId, {
-        render: error.message,
-        type: "error",
-        isLoading: false,
-        autoClose: 1000,
-      });
+      toast.error(error.message);
     }
-    handleClose();
   };
 
   return (

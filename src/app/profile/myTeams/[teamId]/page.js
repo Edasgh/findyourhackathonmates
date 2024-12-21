@@ -5,17 +5,23 @@ import useChat from "@/hooks/useChat";
 import ChatLoader from "../components/ChatLoader";
 import CustomAvatar from "@/components/CustomAvatar";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowLeft, faPaperPlane } from "@fortawesome/free-solid-svg-icons";
+import {
+  faArrowLeft,
+  faPaperPlane,
+  faTrashCan,
+} from "@fortawesome/free-solid-svg-icons";
 import Link from "next/link";
 import ChatNavigation from "../components/ChatNavigation";
 
 import { socket } from "@/lib/socket";
-
-
+import { getDate } from "@/lib/getDate";
 
 const TeamChat = () => {
   const { teamId } = useChat();
-  
+
+  const currentTimeStamp = getDate();
+  console.log(currentTimeStamp);
+
   const [loading, setLoading] = useState(true);
   const [teamData, setTeamData] = useState(null);
   const [messages, setMessages] = useState([]);
@@ -43,9 +49,8 @@ const TeamChat = () => {
         },
         body: JSON.stringify({
           id: teamId,
-        },),
-        
-      },);
+        }),
+      });
       const data = await res.json();
       if (res.status === 200) {
         setTeamData(data);
@@ -84,20 +89,25 @@ const TeamChat = () => {
       message: message,
       senderId: senderId,
       senderName: senderName,
+      sentOn: currentTimeStamp,
     };
     setMessages([
       ...messages,
-      { message,sender: { name: senderName, id: senderId } },
+      {
+        message,
+        sender: { name: senderName, id: senderId },
+        sentOn: currentTimeStamp,
+      },
     ]);
     socket.emit("message", reqData);
   };
 
   useEffect(() => {
     socket.emit("join-room", teamId);
-    socket.on("message", ({message, senderId, senderName}) => {
-     console.log("message");
+    socket.on("message", ({ message, senderId, senderName, sentOn }) => {
+      console.log("message");
     });
-    
+
     return () => {
       socket.off("join-room");
       socket.off("message");
@@ -166,14 +176,16 @@ const TeamChat = () => {
                             : "bg-textBgPrimary text-textPrimary"
                         }`}
                       >
-                        <h2 className="text-sm font-semibold">
+                        <h2 className="text-sm flex justify-between items-start font-semibold">
                           {m.sender.name}
+
+                          
                         </h2>
                         <p className="font-light">{m.message}</p>
                         <span
                           className={`text-[.6rem] text-blue-100 mt-1 block`}
                         >
-                          {m.timestamp}
+                          {m.sentOn}
                         </span>
                       </div>
                     </div>

@@ -129,7 +129,7 @@ const JoinRequests = () => {
         </div>
       ) : (
         <>
-          <div className="flex mt-12 w-screen h-fit py-12 flex-col gap-3 justify-center bg-bgSecondary items-center">
+          <div className="flex mt-12 w-screen h-screen py-12 flex-col gap-3 justify-start bg-bgSecondary items-center">
             <h1 className="text-center section-title mb-5 text-textPrimary poppins-semibold text-3xl">
               Join Requests
             </h1>

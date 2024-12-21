@@ -1,5 +1,13 @@
 # Find Your HackathonMates - An app for finding a team when you wish to join hackathons & to find appropriate team members for your hackathon team
 
+## Live link : will be updated sortly
+
+## Demo Video :
+https://www.loom.com/share/ec456b20bcc347749fad542a389ab0aa?sid=bf9e9a6c-f664-4945-a4a8-eb5ac91ecae5
+### The Send Application & Send Invite part (lagged a bit in previous part, now fixed)
+https://www.loom.com/share/a9c28922e5444784b39fd6c565f246a0?sid=90b94634-0e92-48d6-aeda-4c97e7281ab2
+
+
 ## Features :
 
 1. At first Signup then, Login to view all the teams.
@@ -15,6 +23,8 @@
 ## Motivation:
 
 I myself find it challenging to find any team mates whenever I want to join any hackathon.So, I wanted to create myself an app where hackathon participants can create their own team, find another team mate who fulfill the team's skill requirements, chat with members,have all the links related to hackathons inside their team for referrence.
+
+**Inspiration** : `Hackbud`
 
 ## Challenges I faced :
 

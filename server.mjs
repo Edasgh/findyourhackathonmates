@@ -27,7 +27,7 @@ app.prepare().then(() => {
         console.log(e);
       }
     });
-    socket.on("message", async ({ roomId, message, senderId, senderName}) => {
+    socket.on("message", async ({ roomId, message, senderId, senderName, sentOn}) => {
       try {
         const saveMsg = await Team.findByIdAndUpdate(
           { _id: roomId },
@@ -35,6 +35,7 @@ app.prepare().then(() => {
             $push: {
               messages: {
                 message: message,
+                sentOn:sentOn,
                 sender: {
                   name: senderName,
                   id: senderId,
@@ -58,7 +59,7 @@ app.prepare().then(() => {
         }}]
         socket
           .to(roomId)
-          .emit("message", { message, senderId, senderName });
+          .emit("message", { message, senderId, senderName , sentOn });
       } catch (error) {
         console.log(error);
         console.log(error.message);

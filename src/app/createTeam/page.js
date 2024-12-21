@@ -96,6 +96,9 @@ export default function createTeam() {
               autoClose: 2000,
               closeButton: true,
             });
+            setInterval(() => {
+              window.location.reload()
+            }, 400);
           }else
           {
             throw new Error("Something went wrong!");

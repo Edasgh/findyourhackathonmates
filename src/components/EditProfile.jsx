@@ -63,6 +63,9 @@ export default function EditProfile({
             autoClose: 2000,
             closeButton: true,
           });
+           setInterval(() => {
+             window.location.reload();
+           }, 300);
         } else {
           throw new Error("Something went wrong!");
         }

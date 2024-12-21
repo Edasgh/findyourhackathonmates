@@ -64,7 +64,8 @@ export default function Navbar() {
 
         {token === null || !token ? (
           <>
-            <Link href="/login"
+            <Link
+              href="/login"
               className="w-fit border-[1px] border-textBgPrimaryHv hover:bg-textBgPrimaryHv text-textPrimary hover:text-black  px-8 py-3 rounded-md cursor-pointer"
               suppressHydrationWarning
             >
@@ -80,7 +81,7 @@ export default function Navbar() {
               Logout
             </button>
             {opened ? (
-              <>
+              <p className="relative">
                 <FontAwesomeIcon
                   icon={faXmark}
                   className="text-textPrimary text-2xl border border-textPrimary p-1 rounded-md cursor-pointer"
@@ -88,17 +89,23 @@ export default function Navbar() {
                     setOpened(!opened);
                   }}
                 />
-              </>
+                <span
+                  className={`bg-textSecondary text-textPrimary px-2 py-1 text-xs rounded-md absolute -top-1 left-0 ${"flex"} `}
+                ></span>
+              </p>
             ) : (
-              <>
+              <p className="relative">
                 <FontAwesomeIcon
                   icon={faBars}
-                  className="text-textPrimary text-2xl cursor-pointer"
+                  className="text-textPrimary text-2xl border border-textPrimary p-1 rounded-md cursor-pointer"
                   onClick={() => {
                     setOpened(!opened);
                   }}
                 />
-              </>
+                <span
+                  className={`bg-textSecondary text-textPrimary px-2 py-1 text-xs rounded-md absolute -top-1 left-0 ${"flex"} `}
+                ></span>
+              </p>
             )}
           </span>
         )}
@@ -146,6 +153,7 @@ export default function Navbar() {
               }
             />
             Create your Team
+            
           </Link>
           <Link
             className="text-textPrimary hover:bg-textBgPrimaryHv hover:text-black hover:text-center flex gap-4 items-center px-1 py-2"
