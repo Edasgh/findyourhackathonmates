@@ -3,22 +3,22 @@
 ## Live link : https://findyourhackathonmates-master.onrender.com/
 
  <details open> 
-<summary> <b style="font-size:2rem;">  Demo Videos :</b></summary>
+<summary> <h2>  Demo Videos :</h2></summary>
  <div align="center" style="display:flex; flex-direction:column; gap:3px;">
  <div>
- <h2>Overall Demo</h2>
+ <h3>Overall Demo</h3>
 https://www.loom.com/share/ec456b20bcc347749fad542a389ab0aa?sid=bf9e9a6c-f664-4945-a4a8-eb5ac91ecae5
  </div>
 <div>
-<h2>Create a new Team</h2>
+<h3>Create a new Team</h3>
 https://www.loom.com/share/22d94c6c33884fada9ed29a90450a5c5?sid=f6f5075a-3bbb-467c-ab0e-a6bb6c13392a
 </div>
 <div>
-<h2>The Send Application & Send Invite part (lagged a bit in previous part, now fixed)</h2>
+<h3>The Send Application & Send Invite part (lagged a bit in previous part, now fixed)</h3>
 https://www.loom.com/share/a9c28922e5444784b39fd6c565f246a0?sid=90b94634-0e92-48d6-aeda-4c97e7281ab2
 </div>
 <div>
-<h2>Update group links , Remove members from group</h2>
+<h3>Update group links , Remove members from group</h3>
 https://www.loom.com/share/f408ed648489452cacbe3279f6d4b18f?sid=2e73ebde-b7a5-4bb3-b204-c87c89fd8528
 </div>
 </div>
