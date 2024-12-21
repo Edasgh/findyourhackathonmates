@@ -11,6 +11,25 @@ https://www.loom.com/share/a9c28922e5444784b39fd6c565f246a0?sid=90b94634-0e92-48
 ### Update group links , Remove members from group
 https://www.loom.com/share/f408ed648489452cacbe3279f6d4b18f?sid=2e73ebde-b7a5-4bb3-b204-c87c89fd8528
 
+## UI:
+ ### Home Page
+![image](https://github.com/user-attachments/assets/fc4e5ad2-c161-44ce-8223-3ace828edf9e)
+ ### Teams Page
+![image](https://github.com/user-attachments/assets/60f71dcb-e913-49a0-bd6d-51aee56591c2)
+ ### Team Mates Page
+![image](https://github.com/user-attachments/assets/39eace22-37c8-457b-8e57-d45f48aa0a6e)
+### Profile Page
+![image](https://github.com/user-attachments/assets/92b56017-aa65-4694-bc2e-d9061b922400)
+ ### Teams Page
+![image](https://github.com/user-attachments/assets/401ffc07-7a51-4ca5-83ca-f518ebd29dbf)
+ ### Notifications Page
+![image](https://github.com/user-attachments/assets/0ce361ce-c0bd-4735-8790-112c041a5f95)
+
+
+
+
+ 
+
 
 
 ## Features :
