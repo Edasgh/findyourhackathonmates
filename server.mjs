@@ -9,7 +9,7 @@ const dev = process.env.NODE_ENV !== "production";
 const hostname = process.env.HOSTNAME || "localhost";
 const port = process.env.PORT || 3000;
 
-const app = next({ dev, hostname, port });
+const app = next({ dev });
 const handle = app.getRequestHandler();
 app.prepare().then(() => {
   const server = createServer(handle);
@@ -27,44 +27,52 @@ app.prepare().then(() => {
         console.log(e);
       }
     });
-    socket.on("message", async ({ roomId, message, senderId, senderName, sentOn}) => {
-      try {
-        const saveMsg = await Team.findByIdAndUpdate(
-          { _id: roomId },
-          {
-            $push: {
-              messages: {
-                message: message,
-                sentOn:sentOn,
-                sender: {
-                  name: senderName,
-                  id: senderId,
+    socket.on(
+      "message",
+      async ({ roomId, message, senderId, senderName, sentOn }) => {
+        try {
+          const saveMsg = await Team.findByIdAndUpdate(
+            { _id: roomId },
+            {
+              $push: {
+                messages: {
+                  message: message,
+                  sentOn: sentOn,
+                  sender: {
+                    name: senderName,
+                    id: senderId,
+                  },
                 },
               },
-            },
+            }
+          );
+          if (!saveMsg) {
+            throw new Error("Message not saved");
           }
-        );
-        if (!saveMsg) {
-          throw new Error("Message not saved");
+          const currentTeam = await Team.findById(roomId);
+          if (!currentTeam) {
+            throw new Error("Team not found!");
+          }
+          const messages = currentTeam.messages;
+          const msgs = [
+            ...messages,
+            {
+              message,
+              sender: {
+                id: senderId,
+                name: senderName,
+              },
+            },
+          ];
+          socket
+            .to(roomId)
+            .emit("message", { message, senderId, senderName, sentOn });
+        } catch (error) {
+          console.log(error);
+          console.log(error.message);
         }
-        const currentTeam = await Team.findById(roomId);
-        if(!currentTeam)
-        {
-           throw new Error("Team not found!");
-        }
-        const messages = currentTeam.messages;
-        const msgs = [...messages,{message,sender:{
-          id:senderId,
-          name:senderName,
-        }}]
-        socket
-          .to(roomId)
-          .emit("message", { message, senderId, senderName , sentOn });
-      } catch (error) {
-        console.log(error);
-        console.log(error.message);
       }
-    });
+    );
 
     socket.on("set_link", async ({ teamId, linkName, link }) => {
       try {
@@ -122,8 +130,6 @@ app.prepare().then(() => {
         console.log(error.message);
       }
     });
-
-
 
     socket.on("disconnect", () => {
       console.log(`Disconnected ${socket.id}`);
