@@ -25,6 +25,7 @@ I myself find it challenging to find any team mates whenever I want to join any 
 1. I myself found it a bit difficult to understand the `"Next.js"` folder structure, how server-side rendering occurs here cause, this is my first time creating a full stack "Next.js" application (I made `"MERN"` Apps before but not the `"Next.js"` ones),
 2. Since, it's my first full stack "Next.js" app so, It was pretty hard for me to understand how to configure server apis or setup socket servers in a "Next.js" app,
 3. I'm using `"Nodemailer"` for the first time, so it took a bit longer time for me to understand how "Nodemailer" work and how to handle "Nodemailer" requests.
+4. Deployment of this app was pretty challenging cause I was trying to deploy it in "vercel" at first but it doesn't support "socket.io" so, I finally was able to deploy it in "Render".
 
 ## Tech Stack :
 
