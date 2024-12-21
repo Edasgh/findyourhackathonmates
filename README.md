@@ -1,7 +1,6 @@
 # Find Your HackathonMates - An app for finding a team when you wish to join hackathons & to find appropriate team members for your hackathon team
 
-## Live link : 
-https://findyourhackathonmates-master.onrender.com/
+## Live link : https://findyourhackathonmates-master.onrender.com/
 
 ## Demo Video :
 ### Overall Demo
