@@ -4,11 +4,13 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "next dev",
-    "dev:socket": "node server.mjs",
+    "dev": "node ./server.mjs",
     "build": "next build",
-    "start": "NODE_ENV=production node server.mjs",
+    "start": "node ./server.mjs",
     "lint": "next lint"
+  },
+   "engines": {
+    "node": "<=20.13.12"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.7.1",
