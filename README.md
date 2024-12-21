@@ -70,3 +70,4 @@ I myself find it challenging to find any team mates whenever I want to join any 
 1. I plan to add video calling feature here so that team mates can discuss their project better
 2. Some file sharing feature (image, videos) via chat
 3. Users will be able to add their profile picture (instead of showing avatars)
+4. Will try to make all the pages fully responsive.
