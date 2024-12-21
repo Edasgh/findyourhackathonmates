@@ -24,7 +24,8 @@ https://www.loom.com/share/f408ed648489452cacbe3279f6d4b18f?sid=2e73ebde-b7a5-4b
 </div>
  </details>
 
-## UI:
+ <details open> 
+<summary> <h2> UI: </h2></summary>
  ### Home Page
 ![image](https://github.com/user-attachments/assets/fc4e5ad2-c161-44ce-8223-3ace828edf9e)
  ### Teams Page
@@ -37,6 +38,7 @@ https://www.loom.com/share/f408ed648489452cacbe3279f6d4b18f?sid=2e73ebde-b7a5-4b
 ![image](https://github.com/user-attachments/assets/401ffc07-7a51-4ca5-83ca-f518ebd29dbf)
  ### Notifications Page
 ![image](https://github.com/user-attachments/assets/0ce361ce-c0bd-4735-8790-112c041a5f95)
+ </details>
 
 
 
