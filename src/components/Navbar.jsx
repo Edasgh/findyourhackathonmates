@@ -54,7 +54,7 @@ export default function Navbar() {
   };
   return (
     <>
-      <nav className="navbar flex gap-2 flex-wrap justify-between">
+      <nav className="navbar w-screen flex gap-2 flex-wrap justify-between">
         <Link href="/">
           <p className="text-textPrimary font-semibold text-3xl flex flex-wrap gap-1 items-end cursor-pointer">
             <span className="text-lg font-extralight"> find your</span>

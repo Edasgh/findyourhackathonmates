@@ -59,8 +59,8 @@ const ProfileNav = () => {
       {!loading && userDetails !== null && (
         <>
           <div
-            className={`absolute bg-gray-800 text-white w-52 min-h-screen overflow-y-auto transition-transform transform ${
-              opened && "-translate-x-full"
+            className={`absolute left-0 bg-gray-800 text-white w-52 min-h-screen overflow-y-auto transition-transform transform ${
+              opened && "-translate-x-[30rem]"
             }  ease-in-out duration-200 `}
             id="sidebar"
           >

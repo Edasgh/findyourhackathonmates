@@ -10,6 +10,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import LoadingComponent from "../loading";
+import Footer from "@/components/Footer";
 
 export default function Signup() {
   //router
@@ -22,8 +23,12 @@ export default function Signup() {
         const resp = await fetch("/api/profile");
         const data = await resp.json();
 
-        if (data) {
+        if (resp.status===200) {
           router.push("/teams");
+        }
+        else
+        {
+          throw new Error("Something went wrong!");
         }
       } catch (err) {
         console.log(err);
@@ -782,6 +787,7 @@ export default function Signup() {
               </button>
             </form>
           </div>
+          <Footer/>
         </>
       )}
     </>

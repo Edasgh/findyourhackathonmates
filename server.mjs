@@ -27,7 +27,7 @@ app.prepare().then(() => {
         console.log(e);
       }
     });
-    socket.on("message", async ({ roomId, message, senderId, senderName }) => {
+    socket.on("message", async ({ roomId, message, senderId, senderName}) => {
       try {
         const saveMsg = await Team.findByIdAndUpdate(
           { _id: roomId },
@@ -46,7 +46,19 @@ app.prepare().then(() => {
         if (!saveMsg) {
           throw new Error("Message not saved");
         }
-        socket.to(roomId).emit("message", { message, senderName, senderId });
+        const currentTeam = await Team.findById(roomId);
+        if(!currentTeam)
+        {
+           throw new Error("Team not found!");
+        }
+        const messages = currentTeam.messages;
+        const msgs = [...messages,{message,sender:{
+          id:senderId,
+          name:senderName,
+        }}]
+        socket
+          .to(roomId)
+          .emit("message", { message, senderId, senderName });
       } catch (error) {
         console.log(error);
         console.log(error.message);

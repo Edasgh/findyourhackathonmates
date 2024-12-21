@@ -1,9 +1,11 @@
 "use client";
 
-import NotFound from "@/components/not-found";
-import { use, useLayoutEffect, useState } from "react";
+import NotFoundUser from "@/components/not-found-user";
+
+import { useLayoutEffect, useState } from "react";
 import LoadingComponent from "../loading";
 import TeamMate from "@/components/TeamMate";
+import Footer from "@/components/Footer";
 
 export default function teamMatesPage() {
   const [loading, setLoading] = useState(true);
@@ -42,7 +44,6 @@ export default function teamMatesPage() {
     res();
   }, []);
 
-
   return (
     <>
       {loading && <LoadingComponent />}
@@ -63,14 +64,18 @@ export default function teamMatesPage() {
                   email={t.email}
                   githubID={t.githubID}
                   skills={t.skills}
-                  country = {t.country}
+                  country={t.country}
                 />
               ))}
+          </div>
+          <div className="mt-[30vh]">
+            <Footer/>
           </div>
         </>
       ) : (
         <>
-          <NotFound />
+          <NotFoundUser />
+          <Footer/>
         </>
       )}
     </>

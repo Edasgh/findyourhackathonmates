@@ -5,22 +5,14 @@ import { dbConn } from "@/lib/mongo";
 import Request from "@/model/request-model";
 
 export const POST = async (request) => {
-  const { senderId, teamId, recieverId } = await request.json();
+  const { reqId } = await request.json();
   await dbConn();
 
   try {
-    const request = await Request.findOne({
-      "reciever.id": { $eq: recieverId },
-      "team.id": { $eq: teamId },
-      "sender.id": { $eq: senderId },
-    });
-    if (!request) {
+    const requestEl = await Request.findByIdAndDelete(reqId);
+    console.log(requestEl)
+    if (!requestEl) {
       throw new Error("Request not found!");
-    }
-    //delete the request
-    const deleteRequest = await Request.findByIdAndDelete(request._id);
-    if (!deleteRequest) {
-      throw new Error("Request not deleted!");
     }
   } catch (error) {
     console.log(error.message);

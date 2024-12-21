@@ -8,6 +8,7 @@ import { useLayoutEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import LoadingComponent from "@/app/loading";
+import Footer from "@/components/Footer";
 
 export default function createTeam() {
   const [loading, setLoading] = useState(true);
@@ -95,9 +96,6 @@ export default function createTeam() {
               autoClose: 2000,
               closeButton: true,
             });
-            setInterval(() => {
-              router.push(`/profile/myTeams`);
-            }, 3000);
           }else
           {
             throw new Error("Something went wrong!");
@@ -335,6 +333,9 @@ export default function createTeam() {
               <NotFound />
             </>
           )}
+          <div className="mt-[30vh]">
+          <Footer/>
+          </div>
         </>
       )}
     </>

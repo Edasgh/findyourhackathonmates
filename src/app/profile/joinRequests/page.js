@@ -1,12 +1,11 @@
 "use client";
 import LoadingComponent from "@/app/loading";
-import CustomAvatar from "@/components/CustomAvatar";
-import { faCheck, faXmark } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
 import React, { useLayoutEffect, useState } from "react";
 
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import AlertEl from "./components/AlertEl";
 
 const JoinRequests = () => {
   const [loading, setLoading] = useState(true);
@@ -15,11 +14,14 @@ const JoinRequests = () => {
     try {
       const resp = await fetch("/api/joinRequests");
       const data = await resp.json();
-      console.log(data);
-      setReqs(data);
-      setInterval(() => {
-        setLoading(false);
-      }, 900);
+      if (resp.status === 200) {
+        setReqs(data);
+        setInterval(() => {
+          setLoading(false);
+        }, 900);
+      } else {
+        throw new Error("Something went wrong!");
+      }
     } catch (error) {
       setReqs([]);
       setInterval(() => {
@@ -41,7 +43,8 @@ const JoinRequests = () => {
     senderId,
     teamId,
     recieverName,
-    recieverId
+    recieverId,
+    reqId
   ) => {
     let tId = toast.loading("Please wait...");
 
@@ -53,6 +56,7 @@ const JoinRequests = () => {
         teamId,
         recieverName,
         recieverId,
+        reqId,
       };
       const resp = await fetch("/api/invitationAccept", {
         method: "POST",
@@ -65,9 +69,9 @@ const JoinRequests = () => {
           isLoading: false,
           autoClose: 1500,
         });
-         setInterval(() => {
-           window.location.reload();
-         }, 200);
+        setInterval(() => {
+          window.location.reload();
+        }, 200);
       } else {
         throw new Error("Something went wrong!");
       }
@@ -83,8 +87,8 @@ const JoinRequests = () => {
     }
   };
 
-  const handleReject = async (senderId, teamId, recieverId) => {
-    const data = { senderId, teamId, recieverId };
+  const handleReject = async (reqId) => {
+    const data = { reqId };
     let tId = toast.loading("Please wait...");
     try {
       const resp = await fetch("/api/invitationReject", {
@@ -98,9 +102,9 @@ const JoinRequests = () => {
           isLoading: false,
           autoClose: 1500,
         });
-         setInterval(() => {
-           window.location.reload();
-         }, 800);
+        setInterval(() => {
+          window.location.reload();
+        }, 800);
       } else {
         throw new Error("Something went wrong!");
       }
@@ -125,91 +129,26 @@ const JoinRequests = () => {
         </div>
       ) : (
         <>
-          {reqs.length !== 0 ? (
-            <>
-              {reqs.map((r, i) => (
-                <div
-                  key={i}
-                  className="flex mt-12 w-screen h-fit py-12 flex-col gap-3 justify-center bg-bgSecondary items-center"
-                >
-                  <h1 className="text-center section-title mb-5 text-textPrimary poppins-semibold text-3xl">
-                    Join Requests
-                  </h1>
-                  <div className="bg-textPrimary flex flex-wrap justify-center items-center gap-2 p-5 rounded-lg w-fit">
-                    <CustomAvatar name={r.team.name} />
-
-                    <p className="text-textBgPrimary text-[1rem]">
-                      {r.message}
-                    </p>
-                    <div className="relative flex flex-wrap gap-2">
-                      <button
-                        className="px-2 py-0.5 rounded-md hover:bg-gray-300"
-                        onMouseOver={() => {
-                          setOver1(true);
-                        }}
-                        onMouseOut={() => {
-                          setOver1(false);
-                        }}
-                        onClick={() =>
-                          handleAccept(
-                            r.message,
-                            r.sender.name,
-                            r.sender.id,
-                            r.team.id,
-                            r.reciever.name,
-                            r.reciever.id
-                          )
-                        }
-                      >
-                        <FontAwesomeIcon
-                          className="text-green-700"
-                          icon={faCheck}
-                        />
-                      </button>
-                      <span
-                        className={`bg-slate-500 text-textPrimary px-2 py-1 text-sm rounded-md absolute bottom-10 ${
-                          over1 ? "flex" : "hidden"
-                        } `}
-                      >
-                        Accept
-                      </span>
-                      <button
-                        className="px-2 py-0.5 rounded-md hover:bg-gray-300"
-                        onMouseOver={() => {
-                          setOver2(true);
-                        }}
-                        onMouseOut={() => {
-                          setOver2(false);
-                        }}
-                        onClick={() =>
-                          handleReject(r.sender.id,r.team.id,r.reciever.id)
-                        }
-                      >
-                        <FontAwesomeIcon
-                          className="text-red-700"
-                          icon={faXmark}
-                        />
-                      </button>
-                      <span
-                        className={`bg-slate-500 text-textPrimary px-2 py-1 text-sm rounded-md absolute bottom-10 ${
-                          over2 ? "flex" : "hidden"
-                        } `}
-                      >
-                        Reject
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </>
-          ) : (
-            <div className="flex mt-12 w-screen h-screen py-12 flex-col gap-3 justify-start bg-bgSecondary items-center">
-              <h1 className="text-center section-title mb-5 text-textPrimary poppins-semibold text-3xl">
-                Join Requests
-              </h1>
+          <div className="flex mt-12 w-screen h-fit py-12 flex-col gap-3 justify-center bg-bgSecondary items-center">
+            <h1 className="text-center section-title mb-5 text-textPrimary poppins-semibold text-3xl">
+              Join Requests
+            </h1>
+            {reqs.length !== 0 ? (
+              <>
+                {reqs.map((r, i) => (
+                  <AlertEl
+                    key={i}
+                    index={i}
+                    r={r}
+                    handleAccept={handleAccept}
+                    handleReject={handleReject}
+                  />
+                ))}
+              </>
+            ) : (
               <p className="text-gray-400">No Join Requests Here!</p>
-            </div>
-          )}
+            )}
+          </div>
         </>
       )}
     </>

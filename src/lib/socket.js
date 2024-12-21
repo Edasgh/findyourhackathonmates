@@ -2,4 +2,6 @@
 
 import { io } from "socket.io-client";
 
-export const socket = io();
+const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+
+export const socket = io(`${baseUrl}`,{transports:['websocket']});

@@ -1,5 +1,6 @@
 "use client";
 
+import Footer from "@/components/Footer";
 import { getToken } from "@/lib/verifyToken";
 import { redirect } from "next/navigation";
 import { useLayoutEffect, useState } from "react";
@@ -109,6 +110,7 @@ export default function ForgotPassword() {
           </button>
         </form>
       </div>
+      <Footer/>
     </>
   );
 }

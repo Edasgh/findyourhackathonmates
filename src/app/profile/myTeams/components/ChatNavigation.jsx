@@ -86,7 +86,7 @@ const ChatNavigation = ({
       />
       <LinksModal links={newLinks} open={openLinks} setOpen={setOpenLinks} />
       <div
-        className={`absolute top-0 -right-[15rem] bg-gray-800 text-white w-[15rem] h-fit overflow-y-auto transition-transform transform ${
+        className={`absolute top-0 -right-[15rem] bg-gray-800 text-white w-[14rem] h-fit overflow-y-auto transition-transform transform ${
           opened && "-translate-x-[15rem]"
         }  ease-in-out duration-200 `}
         id="sidebar"

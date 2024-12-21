@@ -1,9 +1,11 @@
 "use client";
 
-import NotFound from "@/components/not-found";
+import NotFoundUser from "@/components/not-found-user";
+
 import { useLayoutEffect, useState } from "react";
 import LoadingComponent from "../loading";
 import Team from "@/components/Team";
+import Footer from "@/components/Footer";
 
 export default function Teams() {
   const [loading, setLoading] = useState(true);
@@ -66,7 +68,7 @@ export default function Teams() {
                       email={t.email}
                       githubLink={t.links[0].link}
                       members={t.members}
-                      admin = {t.admin}
+                      admin={t.admin}
                       name={t.name}
                       skills={t.skills}
                     />
@@ -79,10 +81,14 @@ export default function Teams() {
                   </>
                 )}
               </div>
+              <div className="mt-[30vh]">
+               <Footer/>
+              </div>
             </>
           ) : (
             <>
-              <NotFound />
+              <NotFoundUser />
+              <Footer />
             </>
           )}
         </>

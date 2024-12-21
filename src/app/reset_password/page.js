@@ -10,6 +10,7 @@ import { useState, use, useLayoutEffect } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import LoadingComponent from "../loading";
+import Footer from "@/components/Footer";
 
 export default function ResetPassword({ searchParams }) {
   const router = useRouter();
@@ -266,10 +267,12 @@ export default function ResetPassword({ searchParams }) {
           </button>
         </form>
       </div>
+      <Footer/>
     </>
    ):(
     <>
     <NotFound/>
+    <Footer/>
     </>
    )}
    </>

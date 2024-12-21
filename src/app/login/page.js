@@ -11,6 +11,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 import LoadingComponent from "../loading";
+import Footer from "@/components/Footer";
 
 export default function Login() {
   //router
@@ -24,8 +25,10 @@ export default function Login() {
         const resp = await fetch("/api/profile");
         const data = await resp.json();
 
-        if (data) {
+        if (resp.status === 200) {
           router.push(`/teams`);
+        } else {
+          throw new Error("Something went wrong!");
         }
       } catch (err) {
         console.log(err);
@@ -90,9 +93,8 @@ export default function Login() {
             window.location.reload();
           }, 800);
         }, 3000);
-      }else
-      {
-        throw new Error("User Not Found!");
+      } else {
+        throw new Error("Wrong email or password!");
       }
     } catch (error) {
       toast.update(tId, {
@@ -217,6 +219,7 @@ export default function Login() {
               </button>
             </form>
           </div>
+          <Footer/>
         </>
       )}
     </>

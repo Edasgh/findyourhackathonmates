@@ -1,6 +1,6 @@
 "use client";
 
-import NotFound from "@/components/not-found";
+import NotFoundUser from "@/components/not-found-user";
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -28,8 +28,12 @@ export default function Profile() {
       const resp = await fetch("/api/profile");
       const data = await resp.json();
 
-      setUserDetails(data);
-      setLoading(false);
+      if (resp.status === 200) {
+        setUserDetails(data);
+        setLoading(false);
+      } else {
+        throw new Error("Something went wrong!");
+      }
     } catch (err) {
       setUserDetails(null);
       setLoading(false);
@@ -62,7 +66,7 @@ export default function Profile() {
         <>
           {userDetails === null ? (
             <div className="w-screen">
-              <NotFound />
+              <NotFoundUser />
             </div>
           ) : (
             <div
@@ -102,7 +106,10 @@ export default function Profile() {
                       {userDetails.email}
                     </p>
                   </Link>
-                  <Link  href="/profile/myTeams" className="text-textPrimary flex gap-2 justify-center items-center text-center text-xs">
+                  <Link
+                    href="/profile/myTeams"
+                    className="text-textPrimary flex gap-2 justify-center items-center text-center text-xs"
+                  >
                     &nbsp;
                     <FontAwesomeIcon
                       icon={faPeopleGroup}

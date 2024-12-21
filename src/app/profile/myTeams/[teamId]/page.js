@@ -11,8 +11,11 @@ import ChatNavigation from "../components/ChatNavigation";
 
 import { socket } from "@/lib/socket";
 
+
+
 const TeamChat = () => {
   const { teamId } = useChat();
+  
   const [loading, setLoading] = useState(true);
   const [teamData, setTeamData] = useState(null);
   const [messages, setMessages] = useState([]);
@@ -40,12 +43,12 @@ const TeamChat = () => {
         },
         body: JSON.stringify({
           id: teamId,
-        }),
-      });
+        },),
+        
+      },);
       const data = await res.json();
       if (res.status === 200) {
         setTeamData(data);
-        console.log(data);
         setMessages([...data.messages]);
         setInterval(() => {
           setLoading(false);
@@ -75,6 +78,7 @@ const TeamChat = () => {
     const senderId = userDetails._id;
     const data = new FormData(e.currentTarget);
     const message = data.get("msg");
+
     const reqData = {
       roomId: teamId,
       message: message,
@@ -83,19 +87,17 @@ const TeamChat = () => {
     };
     setMessages([
       ...messages,
-      { message, sender: { name: senderName, id: senderId } },
+      { message,sender: { name: senderName, id: senderId } },
     ]);
     socket.emit("message", reqData);
   };
 
   useEffect(() => {
     socket.emit("join-room", teamId);
-    socket.on("message", ({ message, senderName, senderId }) => {
-      setMessages([
-        ...messages,
-        { message: message, sender: { name: senderName, id: senderId } },
-      ]);
+    socket.on("message", ({message, senderId, senderName}) => {
+     console.log("message");
     });
+    
     return () => {
       socket.off("join-room");
       socket.off("message");
@@ -129,16 +131,16 @@ const TeamChat = () => {
                   </span>
                 </div>
                 <span className="absolute right-0">
-                  {userDetails !== null &&(
+                  {userDetails !== null && (
                     <ChatNavigation
-                    teamId={teamId}
-                    email = {teamData.email}
-                    userId = {userDetails._id}
-                    adminId = {teamData.admin}
-                    name={teamData.name}
-                    description={teamData.description}
-                    members={teamData.members}
-                    links={teamData.links}
+                      teamId={teamId}
+                      email={teamData.email}
+                      userId={userDetails._id}
+                      adminId={teamData.admin}
+                      name={teamData.name}
+                      description={teamData.description}
+                      members={teamData.members}
+                      links={teamData.links}
                     />
                   )}
                 </span>
@@ -168,9 +170,11 @@ const TeamChat = () => {
                           {m.sender.name}
                         </h2>
                         <p className="font-light">{m.message}</p>
-                        {/* <span className={`text-[.6rem] text-blue-100 mt-1 block`}>
-                          {m.sender.name}
-                        </span> */}
+                        <span
+                          className={`text-[.6rem] text-blue-100 mt-1 block`}
+                        >
+                          {m.timestamp}
+                        </span>
                       </div>
                     </div>
                   ))}

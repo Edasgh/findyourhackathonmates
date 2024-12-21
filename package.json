@@ -18,7 +18,6 @@
     "@fortawesome/react-fontawesome": "^0.2.2",
     "@nextui-org/avatar": "^2.2.4",
     "@nextui-org/react": "^2.6.8",
-    "axios": "^1.7.9",
     "bcryptjs": "^2.4.3",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.8.3",
