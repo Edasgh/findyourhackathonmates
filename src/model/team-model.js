@@ -1,3 +1,4 @@
+import { getDate } from "@/lib/getDate";
 import mongoose from "mongoose";
 
 const teamModel = mongoose.Schema(
@@ -31,6 +32,7 @@ const teamModel = mongoose.Schema(
       type: Array,
       items: {
         message: { type: String, required: true },
+        timestamp: { type: String, required: true, default: getDate },
         sender: {
           name: { type: String, required: true },
           id: {
