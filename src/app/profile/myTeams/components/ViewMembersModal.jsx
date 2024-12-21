@@ -12,7 +12,6 @@ const ViewMembersModal = ({
   open,
   setOpen,
 }) => {
-
   const [allmembers, setAllMembers] = useState([...members]);
   const handleClose = () => {
     setOpen(false);
@@ -34,7 +33,7 @@ const ViewMembersModal = ({
   const handleRemoveMember = ({ memberName, memberId }) => {
     // handle remove member logic here
     setAllMembers(allmembers.filter((m) => m.id !== memberId));
-    socket.emit("remove_member", { teamId, memberName, memberId });
+    socket.emit("set_member", { teamId, memberName, memberId });
   };
 
   const [over1, setOver1] = useState(false);
@@ -88,7 +87,7 @@ const ViewMembersModal = ({
                   <p className="text-lg">{m.name}</p>
                   {isAdmin && (
                     <>
-                      {userId!==m.id && (
+                      {userId !== m.id && (
                         <>
                           <FontAwesomeIcon
                             className="text-red-700 text-xl cursor-pointer"
