@@ -49,7 +49,7 @@ https://www.loom.com/share/f408ed648489452cacbe3279f6d4b18f?sid=2e73ebde-b7a5-4b
 
 I myself find it challenging to find any team mates whenever I want to join any hackathon.So, I wanted to create myself an app where hackathon participants can create their own team, find another team mate who fulfill the team's skill requirements, chat with members,have all the links related to hackathons inside their team for referrence.
 
-**Inspiration** : <a href="https://hack-bud.vercel.app/"> `Hackbud` </a>
+**Inspiration** : <a href="https://hack-bud.vercel.app/" target="_blank" > `Hackbud` </a>
 
 ## Challenges I faced :
 
