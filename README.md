@@ -4,10 +4,13 @@
 
 ## Demo Video :
 https://www.loom.com/share/ec456b20bcc347749fad542a389ab0aa?sid=bf9e9a6c-f664-4945-a4a8-eb5ac91ecae5
+### Create a new Team
+https://www.loom.com/share/22d94c6c33884fada9ed29a90450a5c5?sid=f6f5075a-3bbb-467c-ab0e-a6bb6c13392a
 ### The Send Application & Send Invite part (lagged a bit in previous part, now fixed)
 https://www.loom.com/share/a9c28922e5444784b39fd6c565f246a0?sid=90b94634-0e92-48d6-aeda-4c97e7281ab2
 ### Update group links , Remove members from group
 https://www.loom.com/share/f408ed648489452cacbe3279f6d4b18f?sid=2e73ebde-b7a5-4bb3-b204-c87c89fd8528
+
 
 
 ## Features :
